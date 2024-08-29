@@ -1,0 +1,184 @@
+
+
+================================================================
+== Synthesis Summary Report of 'add'
+================================================================
++ General Information: 
+    * Date:           Wed Aug 28 22:09:19 2024
+    * Version:        2024.1.1 (Build 5090947 on Jun 13 2024)
+    * Project:        adder
+    * Solution:       hls (Vitis Kernel Flow Target)
+    * Product family: zynquplus
+    * Target device:  xczu9eg-ffvb1156-2-e
+    
+
++ Performance & Resource Estimates: 
+    
+    PS: '+' for module; 'o' for loop; '*' for dataflow
+    +----------------------------+------+------+---------+-----------+----------+---------+------+----------+---------+----+------------+-----------+-----+
+    |           Modules          | Issue|      | Latency |  Latency  | Iteration|         | Trip |          |         |    |            |           |     |
+    |           & Loops          | Type | Slack| (cycles)|    (ns)   |  Latency | Interval| Count| Pipelined|  BRAM   | DSP|     FF     |    LUT    | URAM|
+    +----------------------------+------+------+---------+-----------+----------+---------+------+----------+---------+----+------------+-----------+-----+
+    |+ add*                      |     -|  0.00|      585|  4.680e+03|         -|      586|     -|  dataflow|  4 (~0%)|   -|  3296 (~0%)|  7045 (2%)|    -|
+    | + Block_entry_split_proc1  |     -|  0.00|      585|  4.680e+03|         -|      585|     -|        no|        -|   -|  2370 (~0%)|  5894 (2%)|    -|
+    +----------------------------+------+------+---------+-----------+----------+---------+------+----------+---------+----+------------+-----------+-----+
+
+
+================================================================
+== HW Interfaces
+================================================================
+* M_AXI
++------------+------------+------------+---------------+---------+--------+----------+-----------+--------------+--------------+-------------+-------------+-------------------+
+| Interface  | Read/Write | Data Width | Address Width | Latency | Offset | Register | Max Widen | Max Read     | Max Write    | Num Read    | Num Write   | Resource Estimate |
+|            |            | (SW->HW)   |               |         |        |          | Bitwidth  | Burst Length | Burst Length | Outstanding | Outstanding |                   |
++------------+------------+------------+---------------+---------+--------+----------+-----------+--------------+--------------+-------------+-------------+-------------------+
+| m_axi_gmem | READ_ONLY  | 4 -> 64    | 64            | 64      | slave  | 0        | 512       | 16           | 16           | 16          | 16          | BRAM=4            |
++------------+------------+------------+---------------+---------+--------+----------+-----------+--------------+--------------+-------------+-------------+-------------------+
+
+* S_AXILITE Interfaces
++---------------+------------+---------------+--------+----------+
+| Interface     | Data Width | Address Width | Offset | Register |
++---------------+------------+---------------+--------+----------+
+| s_axi_control | 32         | 6             | 16     | 0        |
++---------------+------------+---------------+--------+----------+
+
+* S_AXILITE Registers
++---------------+--------------+--------+-------+--------+----------------------------------+------------------------------------------------------------------------------------+
+| Interface     | Register     | Offset | Width | Access | Description                      | Bit Fields                                                                         |
++---------------+--------------+--------+-------+--------+----------------------------------+------------------------------------------------------------------------------------+
+| s_axi_control | CTRL         | 0x00   | 32    | RW     | Control signals                  | 0=AP_START 1=AP_DONE 2=AP_IDLE 3=AP_READY 4=AP_CONTINUE 7=AUTO_RESTART 9=INTERRUPT |
+| s_axi_control | GIER         | 0x04   | 32    | RW     | Global Interrupt Enable Register | 0=Enable                                                                           |
+| s_axi_control | IP_IER       | 0x08   | 32    | RW     | IP Interrupt Enable Register     | 0=CHAN0_INT_EN 1=CHAN1_INT_EN                                                      |
+| s_axi_control | IP_ISR       | 0x0c   | 32    | RW     | IP Interrupt Status Register     | 0=CHAN0_INT_ST 1=CHAN1_INT_ST                                                      |
+| s_axi_control | quotients_1  | 0x10   | 32    | W      | Data signal of quotients         |                                                                                    |
+| s_axi_control | quotients_2  | 0x14   | 32    | W      | Data signal of quotients         |                                                                                    |
+| s_axi_control | remainders_1 | 0x1c   | 32    | W      | Data signal of remainders        |                                                                                    |
+| s_axi_control | remainders_2 | 0x20   | 32    | W      | Data signal of remainders        |                                                                                    |
+| s_axi_control | final_sum    | 0x28   | 32    | R      | Data signal of final_sum         |                                                                                    |
++---------------+--------------+--------+-------+--------+----------------------------------+------------------------------------------------------------------------------------+
+
+* TOP LEVEL CONTROL
++-----------+---------------+-----------+
+| Interface | Type          | Ports     |
++-----------+---------------+-----------+
+| ap_clk    | clock         | ap_clk    |
+| ap_rst_n  | reset         | ap_rst_n  |
+| interrupt | interrupt     | interrupt |
+| ap_ctrl   | ap_ctrl_chain |           |
++-----------+---------------+-----------+
+
+
+================================================================
+== SW I/O Information
+================================================================
+* Top Function Arguments
++------------+-----------+--------------+
+| Argument   | Direction | Datatype     |
++------------+-----------+--------------+
+| quotients  | in        | ap_uint<4>*  |
+| remainders | in        | ap_uint<3>*  |
+| final_sum  | out       | ap_uint<16>& |
++------------+-----------+--------------+
+
+* SW-to-HW Mapping
++------------+---------------+-----------+----------+----------------------------------------+
+| Argument   | HW Interface  | HW Type   | HW Usage | HW Info                                |
++------------+---------------+-----------+----------+----------------------------------------+
+| quotients  | m_axi_gmem    | interface |          | channel=0                              |
+| quotients  | s_axi_control | register  | offset   | name=quotients_1 offset=0x10 range=32  |
+| quotients  | s_axi_control | register  | offset   | name=quotients_2 offset=0x14 range=32  |
+| remainders | m_axi_gmem    | interface |          | channel=0                              |
+| remainders | s_axi_control | register  | offset   | name=remainders_1 offset=0x1c range=32 |
+| remainders | s_axi_control | register  | offset   | name=remainders_2 offset=0x20 range=32 |
+| final_sum  | s_axi_control | register  |          | name=final_sum offset=0x28 range=32    |
++------------+---------------+-----------+----------+----------------------------------------+
+
+
+================================================================
+== M_AXI Burst Information
+================================================================
+ Note: All burst requests might be further partitioned into multiple requests during RTL generation based on max_read_burst_length or max_write_burst_length settings.
+
+  No burst in design
+
+================================================================
+== Bind Op Report
+================================================================
++--------------------------------------+-----+--------+-------------------------+------+-----------+---------+
+| Name                                 | DSP | Pragma | Variable                | Op   | Impl      | Latency |
++--------------------------------------+-----+--------+-------------------------+------+-----------+---------+
+| + add                                | 0   |        |                         |      |           |         |
+|  + Block_entry_split_proc1           | 0   |        |                         |      |           |         |
+|    quotient_contribution_fu_440_p2   |     |        | quotient_contribution   | shl  | auto_pipe | 0       |
+|    add_ln32_fu_454_p2                |     |        | add_ln32                | add  | fabric    | 0       |
+|    empty_33_fu_494_p2                |     |        | empty_33                | lshr | auto_pipe | 0       |
+|    quotient_contribution_1_fu_506_p2 |     |        | quotient_contribution_1 | shl  | auto_pipe | 0       |
+|    add_ln32_1_fu_520_p2              |     |        | add_ln32_1              | add  | fabric    | 0       |
+|    empty_35_fu_560_p2                |     |        | empty_35                | lshr | auto_pipe | 0       |
+|    quotient_contribution_2_fu_582_p2 |     |        | quotient_contribution_2 | shl  | auto_pipe | 0       |
+|    add_ln32_2_fu_596_p2              |     |        | add_ln32_2              | add  | fabric    | 0       |
+|    empty_37_fu_636_p2                |     |        | empty_37                | lshr | auto_pipe | 0       |
+|    quotient_contribution_3_fu_658_p2 |     |        | quotient_contribution_3 | shl  | auto_pipe | 0       |
+|    add_ln32_3_fu_672_p2              |     |        | add_ln32_3              | add  | fabric    | 0       |
+|    empty_39_fu_712_p2                |     |        | empty_39                | lshr | auto_pipe | 0       |
+|    quotient_contribution_4_fu_734_p2 |     |        | quotient_contribution_4 | shl  | auto_pipe | 0       |
+|    add_ln32_4_fu_748_p2              |     |        | add_ln32_4              | add  | fabric    | 0       |
+|    empty_41_fu_788_p2                |     |        | empty_41                | lshr | auto_pipe | 0       |
+|    quotient_contribution_5_fu_810_p2 |     |        | quotient_contribution_5 | shl  | auto_pipe | 0       |
+|    add_ln32_5_fu_824_p2              |     |        | add_ln32_5              | add  | fabric    | 0       |
+|    empty_43_fu_864_p2                |     |        | empty_43                | lshr | auto_pipe | 0       |
+|    quotient_contribution_6_fu_886_p2 |     |        | quotient_contribution_6 | shl  | auto_pipe | 0       |
+|    add_ln32_6_fu_900_p2              |     |        | add_ln32_6              | add  | fabric    | 0       |
+|    empty_45_fu_949_p2                |     |        | empty_45                | lshr | auto_pipe | 0       |
+|    quotient_contribution_7_fu_961_p2 |     |        | quotient_contribution_7 | shl  | auto_pipe | 0       |
+|    add_ln17_fu_975_p2                |     |        | add_ln17                | add  | fabric    | 0       |
+|    add_ln17_1_fu_981_p2              |     |        | add_ln17_1              | add  | fabric    | 0       |
+|    add_ln17_4_fu_999_p2              |     |        | add_ln17_4              | add  | fabric    | 0       |
++--------------------------------------+-----+--------+-------------------------+------+-----------+---------+
+
+
+================================================================
+== Storage Report
+================================================================
++----------------------------+------------+-----------+------+------+--------+----------------+------+---------+------------------+
+| Name                       | Usage      | Type      | BRAM | URAM | Pragma | Variable       | Impl | Latency | Bitwidth, Depth, |
+|                            |            |           |      |      |        |                |      |         | Banks            |
++----------------------------+------------+-----------+------+------+--------+----------------+------+---------+------------------+
+| + add                      |            |           | 4    | 0    |        |                |      |         |                  |
+|   control_s_axi_U          | interface  | s_axilite |      |      |        |                |      |         |                  |
+|   gmem_m_axi_U             | interface  | m_axi     | 4    |      |        |                |      |         |                  |
+|  + Block_entry_split_proc1 |            |           | 0    | 0    |        |                |      |         |                  |
+|    partial_sums_7_fifo_U   | fifo array |           |      |      |        | partial_sums_7 | srl  | 0       | 16, 2, 1         |
+|    partial_sums_fifo_U     | fifo array |           |      |      |        | partial_sums   | srl  | 0       | 16, 2, 1         |
+|    partial_sums_1_fifo_U   | fifo array |           |      |      |        | partial_sums_1 | srl  | 0       | 16, 2, 1         |
+|    partial_sums_2_fifo_U   | fifo array |           |      |      |        | partial_sums_2 | srl  | 0       | 16, 2, 1         |
+|    partial_sums_3_fifo_U   | fifo array |           |      |      |        | partial_sums_3 | srl  | 0       | 16, 2, 1         |
+|    partial_sums_4_fifo_U   | fifo array |           |      |      |        | partial_sums_4 | srl  | 0       | 16, 2, 1         |
+|    partial_sums_5_fifo_U   | fifo array |           |      |      |        | partial_sums_5 | srl  | 0       | 16, 2, 1         |
+|    partial_sums_6_fifo_U   | fifo array |           |      |      |        | partial_sums_6 | srl  | 0       | 16, 2, 1         |
++----------------------------+------------+-----------+------+------+--------+----------------+------+---------+------------------+
+
+
+================================================================
+== Pragma Report
+================================================================
+* Pragmas with Warnings
++----------+---------+-----------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Type     | Options | Location                          | Messages                                                                                                                                                                           |
++----------+---------+-----------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| dataflow |         | ../src/add/add_unit.cpp:24 in add | Since the only kind of statements allowed in a canonical dataflow region are variable declarations and function calls, the compiler may not be able to correctly handle the region |
++----------+---------+-----------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+* Valid Pragma Syntax
++-----------------+--------------------------------------+---------------------------------------------------------+
+| Type            | Options                              | Location                                                |
++-----------------+--------------------------------------+---------------------------------------------------------+
+| inline          |                                      | ../src/add/add_unit.cpp:5 in sorting_unit               |
+| array_partition | variable=partial_sums complete dim=1 | ../src/add/add_unit.cpp:6 in sorting_unit, partial_sums |
+| inline          |                                      | ../src/add/add_unit.cpp:13 in partial_sum_accumulator   |
+| unroll          |                                      | ../src/add/add_unit.cpp:16 in partial_sum_accumulator   |
+| stream          | variable=partial_sums depth=2        | ../src/add/add_unit.cpp:27 in add, partial_sums         |
+| unroll          |                                      | ../src/add/add_unit.cpp:31 in add                       |
++-----------------+--------------------------------------+---------------------------------------------------------+
+
+

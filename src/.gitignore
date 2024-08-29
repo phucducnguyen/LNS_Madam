@@ -1,7 +1,8 @@
 
 # Ignore .log files in all subdirectories
 **/*.log
-
+**/*.cfg
+**/*.hls*
 logs/
 
 .theia/*
