@@ -1,0 +1,245 @@
+<ENTRY>
+{
+ "thisFile": "/home/ndp/LNSMadam_HLS/multiplier/multiplier/multiplier.hlscompile_summary",
+ "connectId": "",
+ "serverToken": "",
+ "timestamp": "0"
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_CmdStep",
+ "dateTimestamp": "Wed Aug 28 19:20:30 2024",
+ "timestampMillis": "1724898030401",
+ "buildStep": {
+  "cmdId": "218483d6-519e-4694-90b4-57b58030bb20",
+  "name": "v++",
+  "logFile": "/home/ndp/LNSMadam_HLS/multiplier/multiplier/logs/multiplier.steps.log",
+  "commandLine": "/tools/Xilinx/Vitis/2024.1/bin/unwrapped/lnx64.o/v++  -c --mode hls --config /home/ndp/LNSMadam_HLS/multiplier/hls_config.cfg --work_dir multiplier ",
+  "args": [
+   "-c",
+   "--mode",
+   "hls",
+   "--config",
+   "/home/ndp/LNSMadam_HLS/multiplier/hls_config.cfg",
+   "--work_dir",
+   "multiplier"
+  ],
+  "iniFiles": [
+   {
+    "path": "/home/ndp/LNSMadam_HLS/multiplier/hls_config.cfg",
+    "content": "part=xczu9eg-ffvb1156-2-e\n\n[hls]\nflow_target=vitis\npackage.output.format=xo\npackage.output.syn=false\nclock=8ns\nclock_uncertainty=12%\ncsim.code_analyzer=1\ntb.file=/home/ndp/LNSMadam_HLS/test_bench/mul_tb.cpp\nsyn.top=multiply\nsyn.file=/home/ndp/LNSMadam_HLS/src/mul/mul_unit.cpp"
+   }
+  ],
+  "cwd": "/home/ndp/LNSMadam_HLS/multiplier"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Aug 28 19:20:30 2024",
+ "timestampMillis": "1724898030401",
+ "status": {
+  "cmdId": "218483d6-519e-4694-90b4-57b58030bb20",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_FlowMetaData",
+ "dateTimestamp": "Wed Aug 28 19:20:33 2024",
+ "timestampMillis": "1724898033015",
+ "buildSummary": {
+  "hardwarePlatform": "",
+  "hardwareDsa": "",
+  "platformDirectory": "",
+  "runtime": "",
+  "systemConfig": "",
+  "flow": "BF_COMPILE",
+  "target": "TT_HW",
+  "kernels": [
+   {
+    "base": {
+     "type": "KERNEL",
+     "name": "multiply",
+     "file": "",
+     "reports": [],
+     "uuid": ""
+    },
+    "sources": [
+     "/home/ndp/LNSMadam_HLS/src/mul/mul_unit.cpp"
+    ],
+    "psSources": [],
+    "cuNames": [],
+    "type": "HLS",
+    "frequency": 0,
+    "freqUnits": ""
+   }
+  ],
+  "toolVersion": "2024.1"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_SubCmdStep",
+ "dateTimestamp": "Wed Aug 28 19:20:33 2024",
+ "timestampMillis": "1724898033016",
+ "buildStep": {
+  "cmdId": "5ac309bf-7d8e-4875-a233-c53465ad7359",
+  "name": "csynth_design",
+  "logFile": "/home/ndp/LNSMadam_HLS/multiplier/multiplier/hls/hls.log",
+  "commandLine": "csynth_design",
+  "args": [],
+  "iniFiles": [],
+  "cwd": "/home/ndp/LNSMadam_HLS/multiplier"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Aug 28 19:20:33 2024",
+ "timestampMillis": "1724898033016",
+ "status": {
+  "cmdId": "5ac309bf-7d8e-4875-a233-c53465ad7359",
+  "state": "CS_RUNNING"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Aug 28 19:20:33 2024",
+ "timestampMillis": "1724898033016",
+ "report": {
+  "path": "/home/ndp/LNSMadam_HLS/multiplier/multiplier/hls/hls_data.json",
+  "name": "",
+  "fileType": "JSON",
+  "reportType": "HLS_SYNTHESIS",
+  "cmdId": ""
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Aug 28 19:20:33 2024",
+ "timestampMillis": "1724898033016",
+ "report": {
+  "path": "/home/ndp/LNSMadam_HLS/multiplier/multiplier/hls/syn/report/csynth.rpt",
+  "name": "",
+  "fileType": "TEXT",
+  "reportType": "HLS_SYNTHESIS",
+  "cmdId": ""
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Aug 28 19:20:33 2024",
+ "timestampMillis": "1724898033017",
+ "report": {
+  "path": "/home/ndp/LNSMadam_HLS/multiplier/multiplier/hls/syn/report/csynth.xml",
+  "name": "",
+  "fileType": "XML",
+  "reportType": "HLS_SYNTHESIS",
+  "cmdId": ""
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Aug 28 19:20:50 2024",
+ "timestampMillis": "1724898050095",
+ "report": {
+  "path": "/home/ndp/LNSMadam_HLS/multiplier/multiplier/hls",
+  "name": "",
+  "fileType": "DIR",
+  "reportType": "HLS_DATAFLOW",
+  "cmdId": ""
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Aug 28 19:20:50 2024",
+ "timestampMillis": "1724898050096",
+ "report": {
+  "path": "/home/ndp/LNSMadam_HLS/multiplier/multiplier/hls",
+  "name": "",
+  "fileType": "DIR",
+  "reportType": "HLS_FUNCTION_CALL_GRAPH",
+  "cmdId": ""
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Aug 28 19:20:50 2024",
+ "timestampMillis": "1724898050096",
+ "report": {
+  "path": "/home/ndp/LNSMadam_HLS/multiplier/multiplier/hls",
+  "name": "",
+  "fileType": "DIR",
+  "reportType": "HLS_SCHEDULE",
+  "cmdId": ""
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Aug 28 19:20:50 2024",
+ "timestampMillis": "1724898050096",
+ "status": {
+  "cmdId": "5ac309bf-7d8e-4875-a233-c53465ad7359",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Status",
+ "dateTimestamp": "Wed Aug 28 19:20:50 2024",
+ "timestampMillis": "1724898050198",
+ "status": {
+  "cmdId": "218483d6-519e-4694-90b4-57b58030bb20",
+  "state": "CS_PASSED"
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Aug 28 19:20:50 2024",
+ "timestampMillis": "1724898050242",
+ "report": {
+  "path": "/home/ndp/LNSMadam_HLS/multiplier/multiplier/reports/v++_compile_multiplier_guidance.html",
+  "name": "",
+  "fileType": "HTML",
+  "reportType": "GLOBAL_RULECHECK_GUIDANCE",
+  "cmdId": ""
+ }
+}
+</ENTRY>
+<ENTRY>
+{
+ "type": "ET_Report",
+ "dateTimestamp": "Wed Aug 28 19:20:50 2024",
+ "timestampMillis": "1724898050242",
+ "report": {
+  "path": "/home/ndp/LNSMadam_HLS/multiplier/multiplier/reports/.db/v++_compile_multiplier_guidance.pb3",
+  "name": "",
+  "fileType": "BINARY_PROTOBUF",
+  "reportType": "GLOBAL_RULECHECK_GUIDANCE",
+  "cmdId": ""
+ }
+}
+</ENTRY>
