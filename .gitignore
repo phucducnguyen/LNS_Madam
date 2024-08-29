@@ -1,0 +1,46 @@
+
+# Ignore .log files in all subdirectories
+**/*.log
+
+logs/
+
+.theia/*
+.wsdata/*
+# Ignore all .cache files and directories recursively
+**/.cache/
+**/hls/
+
+*.lock
+
+# Compiled object files
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+
+# Build directories
+/Debug/
+/Release/
+/build/
+/impl/
+/export/
+/hw/
+/sw/
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+
+# JSON files
+*.json
+
+
+mac_log8/*
+
+# mac_log8/mac_log8/mac_log8.hlsrun_csim_summary
+# mac_log8/compile_commands.json
+# mac_log8/hls_config.cfg
+# mac_log8/vitis-comp.json

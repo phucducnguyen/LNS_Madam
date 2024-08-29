@@ -1,0 +1,3 @@
+source /tools/Xilinx/Vitis/2024.1/settings64.sh
+vitis-run --mode hls --csim --config /home/ndp/log8_hls_model/mac_log8/hls_config.cfg --work_dir mac_log8
+
