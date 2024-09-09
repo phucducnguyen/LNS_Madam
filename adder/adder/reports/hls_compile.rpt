@@ -1,10 +1,10 @@
 
 
 ================================================================
-== Synthesis Summary Report of 'add'
+== Synthesis Summary Report of 'adder'
 ================================================================
 + General Information: 
-    * Date:           Wed Aug 28 22:09:19 2024
+    * Date:           Mon Sep  9 08:05:21 2024
     * Version:        2024.1.1 (Build 5090947 on Jun 13 2024)
     * Project:        adder
     * Solution:       hls (Vitis Kernel Flow Target)
@@ -15,25 +15,28 @@
 + Performance & Resource Estimates: 
     
     PS: '+' for module; 'o' for loop; '*' for dataflow
-    +----------------------------+------+------+---------+-----------+----------+---------+------+----------+---------+----+------------+-----------+-----+
-    |           Modules          | Issue|      | Latency |  Latency  | Iteration|         | Trip |          |         |    |            |           |     |
-    |           & Loops          | Type | Slack| (cycles)|    (ns)   |  Latency | Interval| Count| Pipelined|  BRAM   | DSP|     FF     |    LUT    | URAM|
-    +----------------------------+------+------+---------+-----------+----------+---------+------+----------+---------+----+------------+-----------+-----+
-    |+ add*                      |     -|  0.00|      585|  4.680e+03|         -|      586|     -|  dataflow|  4 (~0%)|   -|  3296 (~0%)|  7045 (2%)|    -|
-    | + Block_entry_split_proc1  |     -|  0.00|      585|  4.680e+03|         -|      585|     -|        no|        -|   -|  2370 (~0%)|  5894 (2%)|    -|
-    +----------------------------+------+------+---------+-----------+----------+---------+------+----------+---------+----+------------+-----------+-----+
+    +--------------------------+------+------+---------+---------+----------+---------+------+----------+---------+----------+------------+------------+-----+
+    |          Modules         | Issue|      | Latency | Latency | Iteration|         | Trip |          |         |          |            |            |     |
+    |          & Loops         | Type | Slack| (cycles)|   (ns)  |  Latency | Interval| Count| Pipelined|  BRAM   |    DSP   |     FF     |     LUT    | URAM|
+    +--------------------------+------+------+---------+---------+----------+---------+------+----------+---------+----------+------------+------------+-----+
+    |+ adder*                  |     -|  0.02|       32|  256.000|         -|       33|     -|  dataflow|  6 (~0%)|  15 (~0%)|  2624 (~0%)|   4696 (1%)|    -|
+    | + addition_unit          |     -|  0.60|       32|  256.000|         -|       32|     -|        no|        -|   2 (~0%)|   325 (~0%)|   452 (~0%)|    -|
+    | + convertback_1          |     -|  0.02|       26|  208.000|         -|       26|     -|        no|  6 (~0%)|  13 (~0%)|  1982 (~0%)|   3813 (1%)|    -|
+    |  + from_float            |     -|  0.02|       25|  200.000|         -|       25|     -|        no|  6 (~0%)|  13 (~0%)|  1963 (~0%)|   3779 (1%)|    -|
+    |   + log_generic_float_s  |    II|  0.25|        6|   48.000|         -|        1|     -|       yes|  6 (~0%)|   8 (~0%)|  1331 (~0%)|  2305 (~0%)|    -|
+    +--------------------------+------+------+---------+---------+----------+---------+------+----------+---------+----------+------------+------------+-----+
 
 
 ================================================================
 == HW Interfaces
 ================================================================
 * M_AXI
-+------------+------------+------------+---------------+---------+--------+----------+-----------+--------------+--------------+-------------+-------------+-------------------+
-| Interface  | Read/Write | Data Width | Address Width | Latency | Offset | Register | Max Widen | Max Read     | Max Write    | Num Read    | Num Write   | Resource Estimate |
-|            |            | (SW->HW)   |               |         |        |          | Bitwidth  | Burst Length | Burst Length | Outstanding | Outstanding |                   |
-+------------+------------+------------+---------------+---------+--------+----------+-----------+--------------+--------------+-------------+-------------+-------------------+
-| m_axi_gmem | READ_ONLY  | 4 -> 64    | 64            | 64      | slave  | 0        | 512       | 16           | 16           | 16          | 16          | BRAM=4            |
-+------------+------------+------------+---------------+---------+--------+----------+-----------+--------------+--------------+-------------+-------------+-------------------+
++------------+------------+------------+---------------+---------+--------+----------+-----------+--------------+--------------+-------------+-------------+
+| Interface  | Read/Write | Data Width | Address Width | Latency | Offset | Register | Max Widen | Max Read     | Max Write    | Num Read    | Num Write   |
+|            |            | (SW->HW)   |               |         |        |          | Bitwidth  | Burst Length | Burst Length | Outstanding | Outstanding |
++------------+------------+------------+---------------+---------+--------+----------+-----------+--------------+--------------+-------------+-------------+
+| m_axi_gmem | READ_ONLY  | 4 -> 8     | 64            | 64      | slave  | 0        | 512       | 16           | 16           | 16          | 16          |
++------------+------------+------------+---------------+---------+--------+----------+-----------+--------------+--------------+-------------+-------------+
 
 * S_AXILITE Interfaces
 +---------------+------------+---------------+--------+----------+
@@ -72,13 +75,13 @@
 == SW I/O Information
 ================================================================
 * Top Function Arguments
-+------------+-----------+--------------+
-| Argument   | Direction | Datatype     |
-+------------+-----------+--------------+
-| quotients  | in        | ap_uint<4>*  |
-| remainders | in        | ap_uint<3>*  |
-| final_sum  | out       | ap_uint<16>& |
-+------------+-----------+--------------+
++------------+-----------+------------------+
+| Argument   | Direction | Datatype         |
++------------+-----------+------------------+
+| quotients  | in        | ap_uint<4>*      |
+| remainders | in        | ap_uint<3>*      |
+| final_sum  | out       | LNS<7, 4, 3, 8>& |
++------------+-----------+------------------+
 
 * SW-to-HW Mapping
 +------------+---------------+-----------+----------+----------------------------------------+
@@ -95,90 +98,175 @@
 
 
 ================================================================
-== M_AXI Burst Information
-================================================================
- Note: All burst requests might be further partitioned into multiple requests during RTL generation based on max_read_burst_length or max_write_burst_length settings.
-
-  No burst in design
-
-================================================================
 == Bind Op Report
 ================================================================
-+--------------------------------------+-----+--------+-------------------------+------+-----------+---------+
-| Name                                 | DSP | Pragma | Variable                | Op   | Impl      | Latency |
-+--------------------------------------+-----+--------+-------------------------+------+-----------+---------+
-| + add                                | 0   |        |                         |      |           |         |
-|  + Block_entry_split_proc1           | 0   |        |                         |      |           |         |
-|    quotient_contribution_fu_440_p2   |     |        | quotient_contribution   | shl  | auto_pipe | 0       |
-|    add_ln32_fu_454_p2                |     |        | add_ln32                | add  | fabric    | 0       |
-|    empty_33_fu_494_p2                |     |        | empty_33                | lshr | auto_pipe | 0       |
-|    quotient_contribution_1_fu_506_p2 |     |        | quotient_contribution_1 | shl  | auto_pipe | 0       |
-|    add_ln32_1_fu_520_p2              |     |        | add_ln32_1              | add  | fabric    | 0       |
-|    empty_35_fu_560_p2                |     |        | empty_35                | lshr | auto_pipe | 0       |
-|    quotient_contribution_2_fu_582_p2 |     |        | quotient_contribution_2 | shl  | auto_pipe | 0       |
-|    add_ln32_2_fu_596_p2              |     |        | add_ln32_2              | add  | fabric    | 0       |
-|    empty_37_fu_636_p2                |     |        | empty_37                | lshr | auto_pipe | 0       |
-|    quotient_contribution_3_fu_658_p2 |     |        | quotient_contribution_3 | shl  | auto_pipe | 0       |
-|    add_ln32_3_fu_672_p2              |     |        | add_ln32_3              | add  | fabric    | 0       |
-|    empty_39_fu_712_p2                |     |        | empty_39                | lshr | auto_pipe | 0       |
-|    quotient_contribution_4_fu_734_p2 |     |        | quotient_contribution_4 | shl  | auto_pipe | 0       |
-|    add_ln32_4_fu_748_p2              |     |        | add_ln32_4              | add  | fabric    | 0       |
-|    empty_41_fu_788_p2                |     |        | empty_41                | lshr | auto_pipe | 0       |
-|    quotient_contribution_5_fu_810_p2 |     |        | quotient_contribution_5 | shl  | auto_pipe | 0       |
-|    add_ln32_5_fu_824_p2              |     |        | add_ln32_5              | add  | fabric    | 0       |
-|    empty_43_fu_864_p2                |     |        | empty_43                | lshr | auto_pipe | 0       |
-|    quotient_contribution_6_fu_886_p2 |     |        | quotient_contribution_6 | shl  | auto_pipe | 0       |
-|    add_ln32_6_fu_900_p2              |     |        | add_ln32_6              | add  | fabric    | 0       |
-|    empty_45_fu_949_p2                |     |        | empty_45                | lshr | auto_pipe | 0       |
-|    quotient_contribution_7_fu_961_p2 |     |        | quotient_contribution_7 | shl  | auto_pipe | 0       |
-|    add_ln17_fu_975_p2                |     |        | add_ln17                | add  | fabric    | 0       |
-|    add_ln17_1_fu_981_p2              |     |        | add_ln17_1              | add  | fabric    | 0       |
-|    add_ln17_4_fu_999_p2              |     |        | add_ln17_4              | add  | fabric    | 0       |
-+--------------------------------------+-----+--------+-------------------------+------+-----------+---------+
++----------------------------------------+-----+--------+----------------+-----------+-----------+---------+
+| Name                                   | DSP | Pragma | Variable       | Op        | Impl      | Latency |
++----------------------------------------+-----+--------+----------------+-----------+-----------+---------+
+| + adder                                | 15  |        |                |           |           |         |
+|  + addition_unit                       | 2   |        |                |           |           |         |
+|    fadd_32ns_32ns_32_4_full_dsp_1_U1   | 2   |        | sum            | fadd      | fulldsp   | 3       |
+|    fadd_32ns_32ns_32_4_full_dsp_1_U1   | 2   |        | sum_1          | fadd      | fulldsp   | 3       |
+|    fadd_32ns_32ns_32_4_full_dsp_1_U1   | 2   |        | sum_2          | fadd      | fulldsp   | 3       |
+|    fadd_32ns_32ns_32_4_full_dsp_1_U1   | 2   |        | sum_3          | fadd      | fulldsp   | 3       |
+|    fadd_32ns_32ns_32_4_full_dsp_1_U1   | 2   |        | sum_4          | fadd      | fulldsp   | 3       |
+|    fadd_32ns_32ns_32_4_full_dsp_1_U1   | 2   |        | sum_5          | fadd      | fulldsp   | 3       |
+|    fadd_32ns_32ns_32_4_full_dsp_1_U1   | 2   |        | sum_6          | fadd      | fulldsp   | 3       |
+|    fadd_32ns_32ns_32_4_full_dsp_1_U1   | 2   |        | sum_7          | fadd      | fulldsp   | 3       |
+|  + convertback_1                       | 13  |        |                |           |           |         |
+|   + from_float                         | 13  |        |                |           |           |         |
+|     icmp_ln49_fu_231_p2                |     |        | icmp_ln49      | setne     | auto      | 0       |
+|     icmp_ln49_1_fu_237_p2              |     |        | icmp_ln49_1    | seteq     | auto      | 0       |
+|     or_ln49_fu_243_p2                  |     |        | or_ln49        | or        | auto      | 0       |
+|     fcmp_32ns_32ns_1_2_no_dsp_1_U32    |     |        | tmp_6          | fcmp      | auto      | 1       |
+|     and_ln49_fu_249_p2                 |     |        | and_ln49       | and       | auto      | 0       |
+|     fcmp_32ns_32ns_1_2_no_dsp_1_U32    |     |        | tmp_8          | fcmp      | auto      | 1       |
+|     s_fu_272_p2                        |     |        | s              | and       | auto      | 0       |
+|     fmul_32ns_32ns_32_3_max_dsp_1_U30  | 3   |        | dc             | fmul      | maxdsp    | 2       |
+|     icmp_ln18_fu_322_p2                |     |        | icmp_ln18      | setlt     | auto      | 0       |
+|     icmp_ln24_fu_327_p2                |     |        | icmp_ln24      | setgt     | auto      | 0       |
+|     add_ln36_fu_354_p2                 |     |        | add_ln36       | add       | fabric    | 0       |
+|     xs_sign_2_fu_382_p2                |     |        | xs_sign_2      | and       | auto      | 0       |
+|     xs_exp_2_fu_387_p3                 |     |        | xs_exp_2       | select    | auto_sel  | 0       |
+|     xs_sig_2_fu_393_p3                 |     |        | xs_sig_2       | select    | auto_sel  | 0       |
+|     xor_ln39_fu_399_p2                 |     |        | xor_ln39       | xor       | auto      | 0       |
+|     xs_sig_3_fu_405_p2                 |     |        | xs_sig_3       | and       | auto      | 0       |
+|     xor_ln18_fu_425_p2                 |     |        | xor_ln18       | xor       | auto      | 0       |
+|     and_ln24_fu_431_p2                 |     |        | and_ln24       | and       | auto      | 0       |
+|     or_ln24_fu_437_p2                  |     |        | or_ln24        | or        | auto      | 0       |
+|     xor_ln24_fu_443_p2                 |     |        | xor_ln24       | xor       | auto      | 0       |
+|     icmp_ln19_fu_449_p2                |     |        | icmp_ln19      | setne     | auto      | 0       |
+|     icmp_ln19_1_fu_454_p2              |     |        | icmp_ln19_1    | setne     | auto      | 0       |
+|     or_ln19_fu_459_p2                  |     |        | or_ln19        | or        | auto      | 0       |
+|     and_ln19_fu_465_p2                 |     |        | and_ln19       | and       | auto      | 0       |
+|     and_ln19_1_fu_470_p2               |     |        | and_ln19_1     | and       | auto      | 0       |
+|     sparsemux_9_3_32_1_1_U33           |     |        | val            | sparsemux | auto      | 0       |
+|     icmp_ln295_fu_556_p2               |     |        | icmp_ln295     | seteq     | auto      | 0       |
+|     sub_ln295_fu_562_p2                |     |        | sub_ln295      | sub       | fabric    | 0       |
+|     icmp_ln295_1_fu_576_p2             |     |        | icmp_ln295_1   | seteq     | auto      | 0       |
+|     icmp_ln295_2_fu_582_p2             |     |        | icmp_ln295_2   | setgt     | auto      | 0       |
+|     icmp_ln295_3_fu_588_p2             |     |        | icmp_ln295_3   | setlt     | auto      | 0       |
+|     sub_ln295_1_fu_594_p2              |     |        | sub_ln295_1    | sub       | fabric    | 0       |
+|     icmp_ln295_4_fu_610_p2             |     |        | icmp_ln295_4   | seteq     | auto      | 0       |
+|     lshr_ln295_fu_620_p2               |     |        | lshr_ln295     | lshr      | auto_pipe | 0       |
+|     q_3_fu_704_p6                      |     |        | shl_ln295      | shl       | auto_pipe | 0       |
+|     xor_ln295_fu_640_p2                |     |        | xor_ln295      | xor       | auto      | 0       |
+|     and_ln295_fu_646_p2                |     |        | and_ln295      | and       | auto      | 0       |
+|     or_ln295_fu_652_p2                 |     |        | or_ln295       | or        | auto      | 0       |
+|     xor_ln295_1_fu_658_p2              |     |        | xor_ln295_1    | xor       | auto      | 0       |
+|     and_ln295_1_fu_664_p2              |     |        | and_ln295_1    | and       | auto      | 0       |
+|     and_ln295_2_fu_670_p2              |     |        | and_ln295_2    | and       | auto      | 0       |
+|     or_ln295_1_fu_676_p2               |     |        | or_ln295_1     | or        | auto      | 0       |
+|     xor_ln295_2_fu_682_p2              |     |        | xor_ln295_2    | xor       | auto      | 0       |
+|     and_ln295_3_fu_688_p2              |     |        | and_ln295_3    | and       | auto      | 0       |
+|     sparsemux_9_3_4_1_1_U34            |     |        | q_3            | sparsemux | auto      | 0       |
+|     q_4_fu_728_p2                      |     |        | q_4            | sub       | fabric    | 0       |
+|     q_5_fu_734_p3                      |     |        | q_5            | select    | auto_sel  | 0       |
+|     uitofp_32ns_32_4_no_dsp_1_U31      |     |        | conv_i         | uitofp    | auto      | 3       |
+|     fsub_32ns_32ns_32_4_full_dsp_1_U29 | 2   |        | sub_i          | fsub      | fulldsp   | 3       |
+|     fmul_32ns_32ns_32_3_max_dsp_1_U30  | 3   |        | val_1          | fmul      | maxdsp    | 2       |
+|     icmp_ln295_5_fu_792_p2             |     |        | icmp_ln295_5   | seteq     | auto      | 0       |
+|     sub_ln295_3_fu_798_p2              |     |        | sub_ln295_3    | sub       | fabric    | 0       |
+|     icmp_ln295_6_fu_812_p2             |     |        | icmp_ln295_6   | seteq     | auto      | 0       |
+|     icmp_ln295_7_fu_818_p2             |     |        | icmp_ln295_7   | setgt     | auto      | 0       |
+|     icmp_ln295_8_fu_824_p2             |     |        | icmp_ln295_8   | setlt     | auto      | 0       |
+|     sub_ln295_4_fu_830_p2              |     |        | sub_ln295_4    | sub       | fabric    | 0       |
+|     icmp_ln295_9_fu_836_p2             |     |        | icmp_ln295_9   | setlt     | auto      | 0       |
+|     lshr_ln295_1_fu_846_p2             |     |        | lshr_ln295_1   | lshr      | auto_pipe | 0       |
+|     r_3_fu_930_p6                      |     |        | shl_ln295_1    | shl       | auto_pipe | 0       |
+|     xor_ln295_3_fu_866_p2              |     |        | xor_ln295_3    | xor       | auto      | 0       |
+|     and_ln295_4_fu_872_p2              |     |        | and_ln295_4    | and       | auto      | 0       |
+|     or_ln295_2_fu_878_p2               |     |        | or_ln295_2     | or        | auto      | 0       |
+|     xor_ln295_4_fu_884_p2              |     |        | xor_ln295_4    | xor       | auto      | 0       |
+|     and_ln295_5_fu_890_p2              |     |        | and_ln295_5    | and       | auto      | 0       |
+|     and_ln295_6_fu_896_p2              |     |        | and_ln295_6    | and       | auto      | 0       |
+|     or_ln295_3_fu_902_p2               |     |        | or_ln295_3     | or        | auto      | 0       |
+|     xor_ln295_5_fu_908_p2              |     |        | xor_ln295_5    | xor       | auto      | 0       |
+|     and_ln295_7_fu_914_p2              |     |        | and_ln295_7    | and       | auto      | 0       |
+|     sparsemux_9_3_3_1_1_U35            |     |        | r_3            | sparsemux | auto      | 0       |
+|     r_4_fu_954_p2                      |     |        | r_4            | sub       | fabric    | 0       |
+|     r_5_fu_960_p3                      |     |        | r_5            | select    | auto_sel  | 0       |
+|    + log_generic_float_s               | 8   |        |                |           |           |         |
+|      x_is_0_fu_712_p2                  |     |        | x_is_0         | seteq     | auto      | 0       |
+|      icmp_ln18_fu_718_p2               |     |        | icmp_ln18      | seteq     | auto      | 0       |
+|      icmp_ln18_1_fu_762_p2             |     |        | icmp_ln18_1    | setne     | auto      | 0       |
+|      x_is_NaN_fu_767_p2                |     |        | x_is_NaN       | and       | auto      | 0       |
+|      or_ln223_fu_1177_p2               |     |        | or_ln223       | or        | auto      | 0       |
+|      or_ln223_1_fu_732_p2              |     |        | or_ln223_1     | or        | auto      | 0       |
+|      select_ln223_fu_1181_p3           |     |        | select_ln223   | select    | auto_sel  | 0       |
+|      b_frac_2_fu_792_p3                |     |        | b_frac_2       | select    | auto_sel  | 0       |
+|      select_ln275_1_fu_1058_p3         |     |        | select_ln275_1 | select    | auto_sel  | 0       |
+|      b_exp_fu_1065_p2                  |     |        | b_exp          | add       | fabric    | 0       |
+|      mul_9s_42ns_50_1_1_U13            | 2   |        | Elog2          | mul       | auto      | 0       |
+|      mul_25ns_6ns_31_1_1_U14           | 1   |        | b_frac1        | mul       | auto      | 0       |
+|      eZ_fu_881_p3                      |     |        | eZ             | select    | auto_sel  | 0       |
+|      mul_36ns_4ns_40_1_1_U15           |     |        | mul_ln42       | mul       | auto      | 0       |
+|      mul_6ns_38ns_44_1_1_U12           | 2   |        | mul_ln42_1     | mul       | auto      | 0       |
+|      mul_6ns_37ns_43_1_1_U11           | 2   |        | mul_ln42_2     | mul       | auto      | 0       |
+|      mul_18ns_18ns_36_1_1_U16          | 1   |        | mul_ln313      | mul       | auto      | 0       |
+|      sub_ln313_fu_1215_p2              |     |        | sub_ln313      | sub       | fabric    | 0       |
+|      add_ln316_fu_1050_p2              |     |        | add_ln316      | add       | fabric    | 0       |
+|      add_ln316_2_fu_1252_p2            |     |        | add_ln316_2    | add       | fabric    | 0       |
+|      add_ln316_3_fu_1262_p2            |     |        | add_ln316_3    | add       | fabric    | 0       |
+|      log_base_1_fu_1286_p2             |     |        | log_base_1     | sub       | fabric    | 0       |
+|      log_base_2_fu_1292_p3             |     |        | log_base_2     | select    | auto_sel  | 0       |
+|      sub_ln348_fu_1755_p2              |     |        | sub_ln348      | sub       | fabric    | 0       |
+|      ashr_ln348_fu_1765_p2             |     |        | ashr_ln348     | ashr      | auto_pipe | 0       |
+|      log_base_l_fu_1782_p2             |     |        | log_base_l     | add       | fabric    | 0       |
+|      add_ln350_fu_1788_p2              |     |        | add_ln350      | add       | fabric    | 0       |
+|      r_exp_1_fu_1806_p2                |     |        | r_exp_1        | add       | fabric    | 0       |
+|      r_exp_2_fu_1812_p3                |     |        | r_exp_2        | select    | auto_sel  | 0       |
+|      out_exp_fu_1828_p2                |     |        | out_exp        | add       | fabric    | 0       |
+|      add_ln355_fu_1834_p2              |     |        | add_ln355      | add       | fabric    | 0       |
+|      lshr_ln355_fu_1844_p2             |     |        | lshr_ln355     | lshr      | auto_pipe | 0       |
++----------------------------------------+-----+--------+----------------+-----------+-----------+---------+
 
 
 ================================================================
 == Storage Report
 ================================================================
-+----------------------------+------------+-----------+------+------+--------+----------------+------+---------+------------------+
-| Name                       | Usage      | Type      | BRAM | URAM | Pragma | Variable       | Impl | Latency | Bitwidth, Depth, |
-|                            |            |           |      |      |        |                |      |         | Banks            |
-+----------------------------+------------+-----------+------+------+--------+----------------+------+---------+------------------+
-| + add                      |            |           | 4    | 0    |        |                |      |         |                  |
-|   control_s_axi_U          | interface  | s_axilite |      |      |        |                |      |         |                  |
-|   gmem_m_axi_U             | interface  | m_axi     | 4    |      |        |                |      |         |                  |
-|  + Block_entry_split_proc1 |            |           | 0    | 0    |        |                |      |         |                  |
-|    partial_sums_7_fifo_U   | fifo array |           |      |      |        | partial_sums_7 | srl  | 0       | 16, 2, 1         |
-|    partial_sums_fifo_U     | fifo array |           |      |      |        | partial_sums   | srl  | 0       | 16, 2, 1         |
-|    partial_sums_1_fifo_U   | fifo array |           |      |      |        | partial_sums_1 | srl  | 0       | 16, 2, 1         |
-|    partial_sums_2_fifo_U   | fifo array |           |      |      |        | partial_sums_2 | srl  | 0       | 16, 2, 1         |
-|    partial_sums_3_fifo_U   | fifo array |           |      |      |        | partial_sums_3 | srl  | 0       | 16, 2, 1         |
-|    partial_sums_4_fifo_U   | fifo array |           |      |      |        | partial_sums_4 | srl  | 0       | 16, 2, 1         |
-|    partial_sums_5_fifo_U   | fifo array |           |      |      |        | partial_sums_5 | srl  | 0       | 16, 2, 1         |
-|    partial_sums_6_fifo_U   | fifo array |           |      |      |        | partial_sums_6 | srl  | 0       | 16, 2, 1         |
-+----------------------------+------------+-----------+------+------+--------+----------------+------+---------+------------------+
++----------------------------------------------------------------------------+--------------+------------+------+------+--------+---------------------------------------------------------------------+------+---------+------------------+
+| Name                                                                       | Usage        | Type       | BRAM | URAM | Pragma | Variable                                                            | Impl | Latency | Bitwidth, Depth, |
+|                                                                            |              |            |      |      |        |                                                                     |      |         | Banks            |
++----------------------------------------------------------------------------+--------------+------------+------+------+--------+---------------------------------------------------------------------+------+---------+------------------+
+| + adder                                                                    |              |            | 6    | 0    |        |                                                                     |      |         |                  |
+|   control_s_axi_U                                                          | interface    | s_axilite  |      |      |        |                                                                     |      |         |                  |
+|   final_sum_float_U                                                        | fifo channel | task level |      |      |        | final_sum_float                                                     | srl  | 0       | 32, 2, 1         |
+|  + convertback_1                                                           |              |            | 6    | 0    |        |                                                                     |      |         |                  |
+|   + from_float                                                             |              |            | 6    | 0    |        |                                                                     |      |         |                  |
+|     mask_table_U                                                           | rom_1p       |            |      |      |        | mask_table                                                          | auto | 1       | 23, 32, 1        |
+|    + log_generic_float_s                                                   |              |            | 6    | 0    |        |                                                                     |      |         |                  |
+|      log_inverse_lut_table_0_5_64_array_U                                  | rom_1p       |            |      |      |        | log_inverse_lut_table_0_5_64_array                                  | auto | 1       | 6, 64, 1         |
+|      log0_lut_table_ap_fixed_float_0_5_64_array_U                          | rom_1p       |            | 2    |      |        | log0_lut_table_ap_fixed_float_0_5_64_array                          | auto | 1       | 49, 64, 1        |
+|      log_lut_table_ap_fixed_58_9_ap_q_mode_5_ap_o_mode_3_0_4_4_16_array_U  | rom_1p       |            |      |      |        | log_lut_table_ap_fixed_58_9_ap_q_mode_5_ap_o_mode_3_0_4_4_16_array  | auto | 1       | 45, 16, 1        |
+|      log_lut_table_ap_fixed_58_9_ap_q_mode_5_ap_o_mode_3_0_7_6_64_array_U  | rom_1p       |            | 2    |      |        | log_lut_table_ap_fixed_58_9_ap_q_mode_5_ap_o_mode_3_0_7_6_64_array  | auto | 1       | 42, 64, 1        |
+|      log_lut_table_ap_fixed_58_9_ap_q_mode_5_ap_o_mode_3_0_12_6_64_array_U | rom_1p       |            | 2    |      |        | log_lut_table_ap_fixed_58_9_ap_q_mode_5_ap_o_mode_3_0_12_6_64_array | auto | 1       | 37, 64, 1        |
++----------------------------------------------------------------------------+--------------+------------+------+------+--------+---------------------------------------------------------------------+------+---------+------------------+
 
 
 ================================================================
 == Pragma Report
 ================================================================
 * Pragmas with Warnings
-+----------+---------+-----------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| Type     | Options | Location                          | Messages                                                                                                                                                                           |
-+----------+---------+-----------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| dataflow |         | ../src/add/add_unit.cpp:24 in add | Since the only kind of statements allowed in a canonical dataflow region are variable declarations and function calls, the compiler may not be able to correctly handle the region |
-+----------+---------+-----------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
++----------+---------+------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Type     | Options | Location                                                   | Messages                                                                                                                                                                           |
++----------+---------+------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| dataflow |         | ../src/add/add_unit.cpp:48 in partial_sums_generation_unit | Since the only kind of statements allowed in a canonical dataflow region are variable declarations and function calls, the compiler may not be able to correctly handle the region |
++----------+---------+------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 * Valid Pragma Syntax
-+-----------------+--------------------------------------+---------------------------------------------------------+
-| Type            | Options                              | Location                                                |
-+-----------------+--------------------------------------+---------------------------------------------------------+
-| inline          |                                      | ../src/add/add_unit.cpp:5 in sorting_unit               |
-| array_partition | variable=partial_sums complete dim=1 | ../src/add/add_unit.cpp:6 in sorting_unit, partial_sums |
-| inline          |                                      | ../src/add/add_unit.cpp:13 in partial_sum_accumulator   |
-| unroll          |                                      | ../src/add/add_unit.cpp:16 in partial_sum_accumulator   |
-| stream          | variable=partial_sums depth=2        | ../src/add/add_unit.cpp:27 in add, partial_sums         |
-| unroll          |                                      | ../src/add/add_unit.cpp:31 in add                       |
-+-----------------+--------------------------------------+---------------------------------------------------------+
++-----------------+---------------------------------------------+-------------------------------------------------------------------------+
+| Type            | Options                                     | Location                                                                |
++-----------------+---------------------------------------------+-------------------------------------------------------------------------+
+| unroll          |                                             | ../src/add/add_unit.cpp:9 in initialize_lut                             |
+| pipeline        | II=1                                        | ../src/add/add_unit.cpp:30 in partial_sum_accumulator                   |
+| array_partition | variable=partial_sum complete dim=1         | ../src/add/add_unit.cpp:31 in partial_sum_accumulator, partial_sum      |
+| unroll          |                                             | ../src/add/add_unit.cpp:40 in multiplier                                |
+| array_partition | variable=partial_sum complete dim=1         | ../src/add/add_unit.cpp:53 in partial_sums_generation_unit, partial_sum |
+| unroll          |                                             | ../src/add/add_unit.cpp:56 in partial_sums_generation_unit              |
+| unroll          |                                             | ../src/add/add_unit.cpp:71 in addition_unit                             |
+| dataflow        |                                             | ../src/add/add_unit.cpp:84 in adder                                     |
+| array_partition | variable=partial_sum_results complete dim=1 | ../src/add/add_unit.cpp:87 in adder, partial_sum_results                |
++-----------------+---------------------------------------------+-------------------------------------------------------------------------+
 
 

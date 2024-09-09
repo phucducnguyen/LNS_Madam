@@ -1,4 +1,4 @@
-#include "../src/multiplier.cpp"
+#include "../src/mac.h"
 
 // Testbench for the Log8 struct
 void lns_example() {
@@ -30,9 +30,9 @@ void lns_example() {
 
 }
 
-int main() {
+// int main() {
     
-    lns_example();
+//     lns_example();
 
-    return 0;
-}
+//     return 0;
+// }

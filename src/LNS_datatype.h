@@ -7,6 +7,9 @@
 #include <cstdio>
 #include <iostream>
 
+#define N 4 // Number of accumulators
+#define M 16 // Number of possible partial sum - 8 for possitive and 8 for negative number
+
 // Define base factor Gamma, bit-width B, and bit-widths for quotient and remainder
 constexpr int B = 7;
 constexpr int Q = 4;  // Bit-width for quotient
@@ -82,6 +85,17 @@ struct LNS {
         printf("Sign: %d, ", sign.to_int());
         printf("Exponent: (Quotient: %d, Remainder: %d), ", quotient.to_int(), remainder.to_int());
         printf("Full Exponent: %d\n", exponent.to_int());
+    }
+
+    // Subscript operator for array access
+    LNS& operator[](int index) {
+        if (index == 0) return *this;
+        // throw std::out_of_range("Index out of bounds");
+    }
+
+    const LNS& operator[](int index) const {
+        if (index == 0) return *this;
+        // throw std::out_of_range("Index out of bounds");
     }
 };
 

@@ -1,9 +1,8 @@
+#ifndef ADD_UNIT_H
+#define ADD_UNIT_H
+
 #include "../LNS_datatype.h" // Ensure this header file includes LNS class definition
 
-#define N 8 // Number of accumulators
-
-typedef ap_uint<4> quotient_t;
-typedef ap_uint<3> remainder_t;
 typedef ap_uint<16> sum_t;
 
 extern "C" {
@@ -20,7 +19,7 @@ extern "C" {
 	void multiplier(sum_t partial_sum[N], float partial_sum_scale[N]);
 
 	// Partial Sums Generation Unit: Orchestrates sorting and accumulation
-	void partial_sums_generation_unit(quotient_t quotients[N], remainder_t remainders[N], float partial_sum_results[N]);
+	void partial_sums_generation_unit(LNS<B, Q, R, Gamma> inputs[N], float partial_sum_results[N]);
 
 	// Addition Unit: Sums up the partial sums
 	void addition_unit(float partial_sum_accumulator_out[N], float &final_sum);
@@ -29,7 +28,9 @@ extern "C" {
 	void convertback(float sum, LNS<B, Q, R, Gamma> &final_sum);
 
 	// Main adder function
-	void adder(quotient_t quotients[N], remainder_t remainders[N], LNS<B, Q, R, Gamma> &final_sum);
+	void adder(LNS<B, Q, R, Gamma> inputs[N], LNS<B, Q, R, Gamma> &final_sum);
 
 
 }
+
+#endif

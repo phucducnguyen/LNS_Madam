@@ -1,0 +1,137 @@
+
+
+================================================================
+== Synthesis Summary Report of 'mac'
+================================================================
++ General Information: 
+    * Date:           Mon Sep  9 13:14:14 2024
+    * Version:        2024.1.1 (Build 5090947 on Jun 13 2024)
+    * Project:        mac
+    * Solution:       hls (Vivado IP Flow Target)
+    * Product family: zynquplus
+    * Target device:  xczu9eg-ffvb1156-2-e
+    
+
++ Performance & Resource Estimates: 
+    
+    PS: '+' for module; 'o' for loop; '*' for dataflow
+    +--------+------+------+---------+--------+----------+---------+------+----------+------+----+---+----+-----+
+    | Modules| Issue|      | Latency | Latency| Iteration|         | Trip |          |      |    |   |    |     |
+    | & Loops| Type | Slack| (cycles)|  (ns)  |  Latency | Interval| Count| Pipelined| BRAM | DSP| FF| LUT| URAM|
+    +--------+------+------+---------+--------+----------+---------+------+----------+------+----+---+----+-----+
+    |+ mac   |     -|  7.30|        0|   0.000|         -|        1|     -|        no|     -|   -|  -|   -|    -|
+    +--------+------+------+---------+--------+----------+---------+------+----------+------+----+---+----+-----+
+
+
+================================================================
+== HW Interfaces
+================================================================
+* AP_MEMORY
++------------------------+-----------+----------+
+| Port                   | Direction | Bitwidth |
++------------------------+-----------+----------+
+| array_input_a_address0 | out       | 2        |
+| array_input_a_address1 | out       | 2        |
+| array_input_a_d0       | out       | 15       |
+| array_input_a_d1       | out       | 15       |
+| array_input_a_q0       | in        | 15       |
+| array_input_a_q1       | in        | 15       |
+| array_input_b_address0 | out       | 2        |
+| array_input_b_address1 | out       | 2        |
+| array_input_b_d0       | out       | 15       |
+| array_input_b_d1       | out       | 15       |
+| array_input_b_q0       | in        | 15       |
+| array_input_b_q1       | in        | 15       |
++------------------------+-----------+----------+
+
+* Other Ports
++--------+---------+-----------+----------+
+| Port   | Mode    | Direction | Bitwidth |
++--------+---------+-----------+----------+
+| result | ap_none | in        | 15       |
++--------+---------+-----------+----------+
+
+* TOP LEVEL CONTROL
++-----------+------------+-----------------------------------+
+| Interface | Type       | Ports                             |
++-----------+------------+-----------------------------------+
+| ap_rst    | reset      | ap_rst                            |
+| ap_ctrl   | ap_ctrl_hs | ap_done ap_idle ap_ready ap_start |
++-----------+------------+-----------------------------------+
+
+
+================================================================
+== SW I/O Information
+================================================================
+* Top Function Arguments
++---------------+-----------+------------------+
+| Argument      | Direction | Datatype         |
++---------------+-----------+------------------+
+| array_input_a | in        | LNS<7, 4, 3, 8>* |
+| array_input_b | in        | LNS<7, 4, 3, 8>* |
+| result        | unused    | LNS<7, 4, 3, 8>& |
++---------------+-----------+------------------+
+
+* SW-to-HW Mapping
++---------------+------------------------+---------+----------+
+| Argument      | HW Interface           | HW Type | HW Usage |
++---------------+------------------------+---------+----------+
+| array_input_a | array_input_a_address0 | port    | offset   |
+| array_input_a | array_input_a_ce0      | port    |          |
+| array_input_a | array_input_a_we0      | port    |          |
+| array_input_a | array_input_a_d0       | port    |          |
+| array_input_a | array_input_a_q0       | port    |          |
+| array_input_a | array_input_a_address1 | port    | offset   |
+| array_input_a | array_input_a_ce1      | port    |          |
+| array_input_a | array_input_a_we1      | port    |          |
+| array_input_a | array_input_a_d1       | port    |          |
+| array_input_a | array_input_a_q1       | port    |          |
+| array_input_b | array_input_b_address0 | port    | offset   |
+| array_input_b | array_input_b_ce0      | port    |          |
+| array_input_b | array_input_b_we0      | port    |          |
+| array_input_b | array_input_b_d0       | port    |          |
+| array_input_b | array_input_b_q0       | port    |          |
+| array_input_b | array_input_b_address1 | port    | offset   |
+| array_input_b | array_input_b_ce1      | port    |          |
+| array_input_b | array_input_b_we1      | port    |          |
+| array_input_b | array_input_b_d1       | port    |          |
+| array_input_b | array_input_b_q1       | port    |          |
+| result        | result                 | port    |          |
++---------------+------------------------+---------+----------+
+
+
+================================================================
+== Bind Op Report
+================================================================
+  No bind op info in design
+
+================================================================
+== Storage Report
+================================================================
+  No bind storage info in design
+
+================================================================
+== Pragma Report
+================================================================
+* Valid Pragma Syntax
++-----------------+---------------------------------------------+-------------------------------------------------------------------------+
+| Type            | Options                                     | Location                                                                |
++-----------------+---------------------------------------------+-------------------------------------------------------------------------+
+| unroll          |                                             | ../src/add/add_unit.cpp:9 in initialize_lut                             |
+| pipeline        | II=1                                        | ../src/add/add_unit.cpp:30 in partial_sum_accumulator                   |
+| array_partition | variable=partial_sum complete dim=1         | ../src/add/add_unit.cpp:31 in partial_sum_accumulator, partial_sum      |
+| unroll          |                                             | ../src/add/add_unit.cpp:40 in multiplier                                |
+| array_partition | variable=partial_sum complete dim=1         | ../src/add/add_unit.cpp:52 in partial_sums_generation_unit, partial_sum |
+| unroll          |                                             | ../src/add/add_unit.cpp:55 in partial_sums_generation_unit              |
+| unroll          |                                             | ../src/add/add_unit.cpp:70 in addition_unit                             |
+| dataflow        |                                             | ../src/add/add_unit.cpp:83 in adder                                     |
+| array_partition | variable=partial_sum_results complete dim=1 | ../src/add/add_unit.cpp:86 in adder, partial_sum_results                |
+| unroll          |                                             | ../src/mac.cpp:9 in mac                                                 |
+| pipeline        | II=1                                        | ../src/mul/mul_unit.cpp:6 in multiply                                   |
+| interface       | ap_ctrl_none port=return                    | ../src/mul/mul_unit.cpp:7 in multiply, return                           |
+| interface       | ap_none port=a                              | ../src/mul/mul_unit.cpp:8 in multiply, a                                |
+| interface       | ap_none port=b                              | ../src/mul/mul_unit.cpp:9 in multiply, b                                |
+| interface       | ap_none port=result                         | ../src/mul/mul_unit.cpp:10 in multiply, result                          |
++-----------------+---------------------------------------------+-------------------------------------------------------------------------+
+
+

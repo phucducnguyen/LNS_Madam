@@ -3407,18 +3407,18 @@ window.onload = function () { addSorting(); }
 <center><h1>Design Guidance Report</h1></center><center><table class="header" border="0">
 <tr><td><b>Copyright</b></td><td>Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.</td></tr>
 <tr><td><b>Tool Version</b></td><td>xcd v.2024.1.1 (lin64) Build 0 </td></tr>
-<tr><td><b>Date</b></td><td>Mon Sep  9 08:05:22 2024</td></tr>
+<tr><td><b>Date</b></td><td>Mon Sep  9 13:14:24 2024</td></tr>
 <tr><td><b>Host</b></td><td>ndpfpga running 64-bit Ubuntu 20.04.6 LTS</td></tr>
-<tr><td><b>Command</b></td><td>/tools/Xilinx/Vitis/2024.1/bin/unwrapped/lnx64.o/v++  -c --mode hls --config /home/ndp/LNSMadam_HLS/adder/hls_config.cfg --work_dir adder </td></tr>
+<tr><td><b>Command</b></td><td>/tools/Xilinx/Vitis/2024.1/bin/unwrapped/lnx64.o/v++  -c --mode hls --config /home/ndp/LNSMadam_HLS/mac/hls_config.cfg --work_dir mac </td></tr>
 </table></center><br>
 <table class="toc" border="1"><tr><td><b>Table of Contents</b></td></tr>
 <tr><td><a href="#REPORT SUMMARY">1 REPORT SUMMARY</a></tr></td>
 <tr><td><a href="#VIOLATION DETAILS">2 VIOLATION DETAILS</a></tr></td>
 </table>
 <a name="REPORT SUMMARY"></a><h1>1 REPORT SUMMARY</h1>
-<pre>Violations found: 4
+<pre>Violations found: 1
 </pre>
-<pre>Rule Specs Violated: 2
+<pre>Rule Specs Violated: 1
 </pre>
 <a name="VIOLATION DETAILS"></a><h1>2 VIOLATION DETAILS</h1>
 <table border="1">
@@ -3434,46 +3434,13 @@ window.onload = function () { addSorting(); }
 <th align="left" width="380">Resolution</th>
 </tr>
 <tr>
-<td align="left">4</td>
+<td align="left">1</td>
 <td align="left">Kernel</td>
 <td align="left">ADVISORY</td>
 <td align="left"><undefined></td>
 <td align="left">HLS Kernel Related</td>
-<td align="left">Accelerator.adder.Kernel</td>
-<td align="left">**** Estimated Fmax: 142.53 MHz
-</td>
-<td align="left"><a href="http:///docs.xilinx.com/access/sources/dita/map?Doc_Version=2024.1%20English&url=ug1399-vitis-hls">Vitis HLS User Guide (UG1399)</a></td>
-</tr>
-<tr>
-<td align="left">1</td>
-<td align="left">Throughput</td>
-<td align="left">WARNING</td>
-<td align="left"><undefined></td>
-<td align="left">HLS Throughput Related</td>
-<td align="left">Accelerator.adder.Throughput</td>
-<td align="left">Since the only kind of statements allowed in a canonical dataflow region are variable declarations and function calls, the compiler may not be able to correctly handle the region (<a href="file:///home/ndp/LNSMadam_HLS/adder/../src/add/add_unit.cpp#line=48">add_unit.cpp</a>)
-</td>
-<td align="left"><a href="http:///docs.xilinx.com/access/sources/dita/map?Doc_Version=2024.1%20English&url=ug1399-vitis-hls">Vitis HLS User Guide (UG1399)</a></td>
-</tr>
-<tr>
-<td align="left">3</td>
-<td align="left">Throughput</td>
-<td align="left">ADVISORY</td>
-<td align="left"><undefined></td>
-<td align="left">HLS Throughput Related</td>
-<td align="left">Accelerator.adder.Throughput</td>
-<td align="left">Pipelining result : Target II = NA, Final II = 1, Depth = 7, function 'log_generic<float>'
-</td>
-<td align="left"><a href="http:///docs.xilinx.com/access/sources/dita/map?Doc_Version=2024.1%20English&url=ug1399-vitis-hls">Vitis HLS User Guide (UG1399)</a></td>
-</tr>
-<tr>
-<td align="left">2</td>
-<td align="left">Throughput</td>
-<td align="left">WARNING</td>
-<td align="left"><undefined></td>
-<td align="left">HLS Throughput Related</td>
-<td align="left">Accelerator.adder.Throughput</td>
-<td align="left">Dataflow form checks found 1 issue(s) in file ../src/add/add_unit.cpp
+<td align="left">Accelerator.mac.Kernel</td>
+<td align="left">**** Estimated Fmax: 0.00 MHz
 </td>
 <td align="left"><a href="http:///docs.xilinx.com/access/sources/dita/map?Doc_Version=2024.1%20English&url=ug1399-vitis-hls">Vitis HLS User Guide (UG1399)</a></td>
 </tr>
