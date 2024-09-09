@@ -10,7 +10,7 @@ void test_adder() {
     LNS<B, Q, R, Gamma> final_sum;
 
     // Call the adder function
-    adder<B, Q, R, Gamma>(quotients, remainders, final_sum);
+    adder(quotients, remainders, final_sum);
 
     // // Output the result
     // std::cout << "Final Sum in LNS format: " << final_sum << std::endl;
