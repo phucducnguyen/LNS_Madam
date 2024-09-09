@@ -1,6 +1,6 @@
 <ENTRY>
 {
- "thisFile": "/home/ndp/LNSMadam_HLS/adder/adder/adder.hlsrun_csim_summary",
+ "thisFile": "/home/ndp/LNSMadam_HLS/adder/adder.hlsrun_csim_summary",
  "connectId": "",
  "serverToken": "",
  "timestamp": "0"
@@ -9,12 +9,12 @@
 <ENTRY>
 {
  "type": "ET_CmdStep",
- "dateTimestamp": "Sun Sep  8 10:11:50 2024",
- "timestampMillis": "1725815510743",
+ "dateTimestamp": "Sun Sep  8 10:18:14 2024",
+ "timestampMillis": "1725815894159",
  "buildStep": {
-  "cmdId": "a63139d8-e2f3-46e9-9ec7-81a2ffddfe47",
+  "cmdId": "c682ac7b-490a-4c3f-b097-aef6e23a48d9",
   "name": "vitis-run",
-  "logFile": "/home/ndp/LNSMadam_HLS/adder/adder/logs/adder.steps.log",
+  "logFile": "/home/ndp/LNSMadam_HLS/adder/logs/adder.steps.log",
   "commandLine": "/tools/Xilinx/Vitis/2024.1/bin/unwrapped/lnx64.o/vitis-run  --mode hls --csim --config /home/ndp/LNSMadam_HLS/adder/hls_config.cfg --work_dir adder ",
   "args": [
    "--mode",
@@ -26,17 +26,17 @@
    "adder"
   ],
   "iniFiles": [],
-  "cwd": "/home/ndp/LNSMadam_HLS/adder"
+  "cwd": "/home/ndp/LNSMadam_HLS"
  }
 }
 </ENTRY>
 <ENTRY>
 {
  "type": "ET_Status",
- "dateTimestamp": "Sun Sep  8 10:11:50 2024",
- "timestampMillis": "1725815510744",
+ "dateTimestamp": "Sun Sep  8 10:18:14 2024",
+ "timestampMillis": "1725815894159",
  "status": {
-  "cmdId": "a63139d8-e2f3-46e9-9ec7-81a2ffddfe47",
+  "cmdId": "c682ac7b-490a-4c3f-b097-aef6e23a48d9",
   "state": "CS_RUNNING"
  }
 }
@@ -44,8 +44,8 @@
 <ENTRY>
 {
  "type": "ET_FlowMetaData",
- "dateTimestamp": "Sun Sep  8 10:11:53 2024",
- "timestampMillis": "1725815513576",
+ "dateTimestamp": "Sun Sep  8 10:18:16 2024",
+ "timestampMillis": "1725815896694",
  "buildSummary": {
   "hardwarePlatform": "",
   "hardwareDsa": "",
@@ -80,26 +80,26 @@
 <ENTRY>
 {
  "type": "ET_SubCmdStep",
- "dateTimestamp": "Sun Sep  8 10:11:53 2024",
- "timestampMillis": "1725815513576",
+ "dateTimestamp": "Sun Sep  8 10:18:16 2024",
+ "timestampMillis": "1725815896695",
  "buildStep": {
-  "cmdId": "24fc45ad-ffa6-4f25-ab2e-34bbe70dc7e9",
+  "cmdId": "92c1eed8-0626-40a8-91b6-6ff416595267",
   "name": "csim_design",
-  "logFile": "/home/ndp/LNSMadam_HLS/adder/adder/hls/hls.log",
+  "logFile": "/home/ndp/LNSMadam_HLS/adder/hls/hls.log",
   "commandLine": "csim_design",
   "args": [],
   "iniFiles": [],
-  "cwd": "/home/ndp/LNSMadam_HLS/adder"
+  "cwd": "/home/ndp/LNSMadam_HLS"
  }
 }
 </ENTRY>
 <ENTRY>
 {
  "type": "ET_Status",
- "dateTimestamp": "Sun Sep  8 10:11:53 2024",
- "timestampMillis": "1725815513576",
+ "dateTimestamp": "Sun Sep  8 10:18:16 2024",
+ "timestampMillis": "1725815896695",
  "status": {
-  "cmdId": "24fc45ad-ffa6-4f25-ab2e-34bbe70dc7e9",
+  "cmdId": "92c1eed8-0626-40a8-91b6-6ff416595267",
   "state": "CS_RUNNING"
  }
 }
@@ -107,10 +107,10 @@
 <ENTRY>
 {
  "type": "ET_Status",
- "dateTimestamp": "Sun Sep  8 10:11:57 2024",
- "timestampMillis": "1725815517360",
+ "dateTimestamp": "Sun Sep  8 10:18:20 2024",
+ "timestampMillis": "1725815900104",
  "status": {
-  "cmdId": "24fc45ad-ffa6-4f25-ab2e-34bbe70dc7e9",
+  "cmdId": "92c1eed8-0626-40a8-91b6-6ff416595267",
   "state": "CS_FAILED"
  }
 }
@@ -118,10 +118,10 @@
 <ENTRY>
 {
  "type": "ET_Status",
- "dateTimestamp": "Sun Sep  8 10:11:57 2024",
- "timestampMillis": "1725815517471",
+ "dateTimestamp": "Sun Sep  8 10:18:20 2024",
+ "timestampMillis": "1725815900202",
  "status": {
-  "cmdId": "a63139d8-e2f3-46e9-9ec7-81a2ffddfe47",
+  "cmdId": "c682ac7b-490a-4c3f-b097-aef6e23a48d9",
   "state": "CS_FAILED"
  }
 }
@@ -129,8 +129,8 @@
 <ENTRY>
 {
  "type": "ET_Report",
- "dateTimestamp": "Sun Sep  8 10:11:57 2024",
- "timestampMillis": "1725815517471",
+ "dateTimestamp": "Sun Sep  8 10:18:20 2024",
+ "timestampMillis": "1725815900202",
  "report": {
   "path": "",
   "name": "",
@@ -143,8 +143,8 @@
 <ENTRY>
 {
  "type": "ET_Report",
- "dateTimestamp": "Sun Sep  8 10:11:57 2024",
- "timestampMillis": "1725815517472",
+ "dateTimestamp": "Sun Sep  8 10:18:20 2024",
+ "timestampMillis": "1725815900203",
  "report": {
   "path": "",
   "name": "",
