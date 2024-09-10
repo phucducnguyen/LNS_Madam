@@ -107,7 +107,7 @@ void convertback(float sum, LNS<B, Q, R, Gamma> &final_sum){
 void adder(LNS<B, Q, R, Gamma> inputs[N], LNS<B, Q, R, Gamma> &final_sum) { // quotient_t quotients[N], remainder_t remainders[N],
 #pragma HLS DATAFLOW
     
-    float partial_sum_results[N];
+    float partial_sum_results[M];
 #pragma HLS ARRAY_PARTITION variable=partial_sum_results complete dim=1
 
     float final_sum_float;
@@ -117,6 +117,9 @@ void adder(LNS<B, Q, R, Gamma> inputs[N], LNS<B, Q, R, Gamma> &final_sum) { // q
 
     // Compute the final sum
     addition_unit(partial_sum_results, final_sum_float);
+
+    std::cout << "final_sum_float =" << final_sum_float << std::endl;
+
 
     // Convert final sum to LNS format
     convertback(final_sum_float, final_sum);
