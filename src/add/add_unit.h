@@ -11,12 +11,13 @@ extern "C" {
 	void initialize_lut();
 	
 	// Sorting Unit: Outputs contributions based on quotient and remainder
-	void sorting_and_shift(LNS<B, Q, R, Gamma> input, hls::stream<sum_t> out[M]);
+	void sorting_and_shift(LNS<B, Q, R, Gamma> input, hls::stream<sum_t> out_stream[M]);
 
-	// Partial Sums Accumulator: Accumulates contributions from the array
+    // Partial Sums Accumulator: Accumulates contributions from the array
 	void partial_sum_accumulator(hls::stream<sum_t> in_stream[M], sum_t partial_sum[M]);
-	
-	void multiplier(sum_t partial_sum[M], float partial_sum_scale[M]);
+
+    // Scale Back: Convert back to float
+	void scale_back(sum_t partial_sum[M], float partial_sum_scale[M]);
 
 	// Partial Sums Generation Unit: Orchestrates sorting and accumulation
 	void partial_sums_generation_unit(LNS<B, Q, R, Gamma> inputs[N], float partial_sum_results[M]);
@@ -25,7 +26,10 @@ extern "C" {
 	void addition_unit(float partial_sum_accumulator_out[M], float &final_sum);
 
 	// Conversion: Convert floating-point result back to LNS format
-	void convertback(float sum, LNS<B, Q, R, Gamma> &final_sum);
+	void convertback(float &sum, LNS<B, Q, R, Gamma> &final_sum);
+
+
+	// void convert_to_float(float &sum, LNS<B, Q, R, Gamma> &final_sum);
 
 	// Main adder function
 	void adder(LNS<B, Q, R, Gamma> inputs[N], LNS<B, Q, R, Gamma> &final_sum);

@@ -36,7 +36,12 @@ logs/
 
 # JSON files
 *.json
-
+*.html
+*.pb3
+*.hlscompile_summary
+*.hlsrun_cosim_summary
+*.hlsrun_csim_summary
+*.rpt
 
 mac_log8/*
 

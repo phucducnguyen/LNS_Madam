@@ -15,10 +15,11 @@ int main() {
     // Call the adder function
     adder(input, final_sum);
 
-    std::cout << "result(" << final_sum.sign << "," << final_sum.exponent << ")" << std::endl;
+    // float float_final_sum = final_sum.to_float();
 
-    std::cout << "result(" << final_sum.sign << "," << final_sum.quotient << "," << final_sum.remainder << ")" << std::endl;
-
+    std::cout << "final_sum(" << final_sum.sign << "," << final_sum.exponent << ")" << std::endl;
+    std::cout << "final_sum(" << final_sum.sign << "," << final_sum.quotient << "," << final_sum.remainder << ")" << std::endl;
+    std::cout << "float_final_sum(" << final_sum.to_float() << ")" << std::endl;
     std::cout << "All tests completed." << std::endl;
     return 0;
 }

@@ -7,7 +7,7 @@
 #include <cstdio>
 #include <iostream>
 
-#define N 4 // Number of accumulators
+#define N 8 // Number of accumulators
 #define M 16 // Number of possible partial sum - 8 for possitive and 8 for negative number
 
 // Define base factor Gamma, bit-width B, and bit-widths for quotient and remainder
@@ -67,7 +67,7 @@ struct LNS {
 
     // Convert LNS to a float (for simulation purposes)
     float to_float() const {
-        float value = hls::pow(2, quotient + (remainder/Gamma));
+        float value = hls::pow( 2.0f, float(quotient) + float(remainder)/Gamma );
         return sign.to_int() ? -value : value;
     }
 
