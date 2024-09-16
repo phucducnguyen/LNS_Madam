@@ -21,7 +21,7 @@ int main() {
                                     LNS<B, Q, R, Gamma>(1, 4, 2),
                                     LNS<B, Q, R, Gamma>(0, 5, 1),
                                     LNS<B, Q, R, Gamma>(0, 2, 0),
-                                    LNS<B, Q, R, Gamma>(1, 2, 8) }; // Log8(0, 2, 3)   
+                                    LNS<B, Q, R, Gamma>(1, 3, 0) }; // Log8(0, 2, 3)   
 
     LNS<B, Q, R, Gamma> result = LNS<B, Q, R, Gamma>();
     
