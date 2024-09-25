@@ -7,7 +7,7 @@
 #include <cstdio>
 #include <iostream>
 
-#define N 8 // Number of accumulators
+#define N 3 // Number of accumulators
 #define M 16 // Number of possible partial sum - 8 for possitive and 8 for negative number
 
 // Define base factor Gamma, bit-width B, and bit-widths for quotient and remainder
@@ -21,6 +21,9 @@ typedef ap_uint<1> sign_t;
 typedef ap_uint<B> exponent_t;
 typedef ap_uint<Q> quotient_t;
 typedef ap_uint<R> remainder_t;
+
+typedef ap_uint<16> sum_t;
+typedef ap_uint<32> scale_t;
 
 
 // Define the LNS data type using a struct
@@ -103,13 +106,35 @@ struct LNS {
 
     // Subscript operator for array access
     LNS& operator[](int index) {
-        if (index == 0) return *this;
-        // throw std::out_of_range("Index out of bounds");
+        return this[index];
     }
 
     const LNS& operator[](int index) const {
-        if (index == 0) return *this;
-        // throw std::out_of_range("Index out of bounds");
+        return this[index];
+    }
+};
+
+
+
+// Helper structure to create 2D array support for LNS
+template<int Rows, int Cols, int B, int Q, int R, int Gamma>
+struct LNS2DArray {
+    LNS<B, Q, R, Gamma> data[Rows][Cols];  // 2D array of LNS
+
+    LNS<B, Q, R, Gamma>* operator[](int row) {
+        return data[row];
+    }
+
+    const LNS<B, Q, R, Gamma>* operator[](int row) const {
+        return data[row];
+    }
+
+    void print() {
+        for (int i = 0; i < Rows; i++) {
+            for (int j = 0; j < Cols; j++) {
+                data[i][j].print();
+            }
+        }
     }
 };
 
