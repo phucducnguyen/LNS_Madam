@@ -19,21 +19,23 @@
 //     result = LNS<B, Q, R, Gamma>(result_sign, result_exp);
 // }
 
-void multiply(const LNS<B, Q, R, Gamma> a[N], const LNS<B, Q, R, Gamma> b[N], LNS<B, Q, R, Gamma> result[N]) {
+void multiply(const LNS<B, Q, R, Gamma> array_input_a[N], const LNS<B, Q, R, Gamma> array_input_b[N], LNS<B, Q, R, Gamma> result[N]) {
 // Implement multiplication of LNS numbers
 #pragma HLS PIPELINE II=1
 #pragma HLS INTERFACE ap_ctrl_none port=return
-#pragma HLS INTERFACE ap_none port=a
-#pragma HLS INTERFACE ap_none port=b
+#pragma HLS INTERFACE ap_none port=array_input_a
+#pragma HLS INTERFACE ap_none port=array_input_b
 #pragma HLS INTERFACE ap_none port=result
+#pragma HLS ARRAY_PARTITION variable=array_input_a cyclic factor=4
+#pragma HLS ARRAY_PARTITION variable=array_input_b cyclic factor=4
 
     for (int i=0; i<N; i++){
-#pragma HLS UNROLL
+#pragma HLS UNROLL factor=2
         // XOR to determine the sign of the result
-        sign_t result_sign = a[i].sign ^ b[i].sign;
+        sign_t result_sign = array_input_a[i].sign ^ array_input_b[i].sign;
 
         // Simple addition of exponents (not the complete LNS multiplication logic)
-        exponent_t result_exp = a[i].exponent + b[i].exponent;
+        exponent_t result_exp = array_input_a[i].exponent + array_input_b[i].exponent;
 
         // Write the result back to the reference parameter
         result[i] = LNS<B, Q, R, Gamma>(result_sign, result_exp);

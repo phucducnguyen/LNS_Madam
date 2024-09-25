@@ -17,7 +17,9 @@ extern "C" {
 	void partial_sum_accumulator(hls::stream<sum_t> in_stream[M], sum_t partial_sum[M]);
 
     // Scale Back: Convert back to float
-	void scale_back(sum_t partial_sum[M], float partial_sum_scale[M]);
+	void scale_back_2power(sum_t partial_sum[M], float partial_sum_scale[M]);
+
+    void scale_back_mitchell(sum_t partial_sum[M], float partial_sum_scale[M]);
 
 	// Partial Sums Generation Unit: Orchestrates sorting and accumulation
 	void partial_sums_generation_unit(LNS<B, Q, R, Gamma> inputs[N], float partial_sum_results[M]);

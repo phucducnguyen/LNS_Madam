@@ -29,7 +29,7 @@ int main() {
 
     std::cout << "final_sum(" << result.sign << "," << result.exponent << ")" << std::endl;
     std::cout << "final_sum(" << result.sign << "," << result.quotient << "," << result.remainder << ")" << std::endl;
-    std::cout << "float_final_sum(" << result.to_float() << ")" << std::endl;
+    // std::cout << "float_final_sum(" << result.to_float() << ")" << std::endl;
     std::cout << "All tests completed." << std::endl;
     
 

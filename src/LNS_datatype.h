@@ -41,6 +41,11 @@ struct LNS {
         remainder = remainder_t(exp - (quotient * Gamma))  ;               
     }
     LNS(sign_t s, quotient_t q, remainder_t r) : sign(s), quotient(q), remainder(r) {
+//         exponent_t temp;
+// #pragma HLS BIND_OP variable=temp op=mul  impl=fabric latency=-1
+// #pragma HLS BIND_OP variable=temp op=add  impl=fabric latency=-1
+//         temp = q * Gamma  + r;
+//         exponent = temp;
         exponent = q * Gamma  + r;
     }    
     LNS(sign_t s, exponent_t exp, quotient_t q, remainder_t r) : sign(s), exponent(exp), quotient(q), remainder(r) {}
@@ -56,11 +61,20 @@ struct LNS {
         sign_t s = value < 0 ? 1 : 0;
 
         // Use integer approximation to calculate exponent
-        float abs_value = hls::fabs(value);
-        quotient_t q = (hls::floor(hls::log2(abs_value)));
-        // Ensure the exponent fits within the bit-width B
-        remainder_t r = (Gamma * (hls::log2(abs_value) - q));
+        float abs_value;
+        quotient_t  q;
+        remainder_t r;
+// #pragma HLS BIND_OP variable=abs_value op=mul  impl=fabric latency=-1
+// #pragma HLS BIND_OP variable=q op=mul  impl=fabric latency=-1
 
+// #pragma HLS BIND_OP variable=r op=mul  impl=fabric latency=-1
+// #pragma HLS BIND_OP variable=r op=sub  impl=fabric latency=-1     
+
+
+        abs_value = hls::fabs(value);
+        q = (hls::floor(hls::log2(abs_value)));
+        // Ensure the exponent fits within the bit-width B
+        r = (Gamma * (hls::log2(abs_value) - q));
         // Create LNS object with computed values
         return LNS(s, q, r);
     }
