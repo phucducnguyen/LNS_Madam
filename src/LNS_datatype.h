@@ -1,20 +1,22 @@
 #ifndef LNS_DATATYPE_H
 #define LNS_DATATYPE_H
 
+#include <ap_int.h>
 #include <hls_math.h>
 #include <hls_stream.h>
-#include <ap_int.h>
 #include <cstdio>
 #include <iostream>
-
-#define N 3 // Number of accumulators
-#define M 16 // Number of possible partial sum - 8 for possitive and 8 for negative number
 
 // Define base factor Gamma, bit-width B, and bit-widths for quotient and remainder
 constexpr int B = 7;
 constexpr int Q = 4;  // Bit-width for quotient
 constexpr int R = 3;  // Bit-width for remainder
 constexpr int Gamma = 8;
+
+constexpr int N = 4; // Number of accumulators
+constexpr int M = Gamma*2; // Number of possible partial sum - if Log8 => 8 for possitive and 8 for negative numbers
+
+constexpr int P = 2; // Array : loop factor --- N%P = 0
 
 // Typedefs for clarity and maintainability
 typedef ap_uint<1> sign_t;
@@ -23,8 +25,8 @@ typedef ap_uint<Q> quotient_t;
 typedef ap_uint<R> remainder_t;
 
 typedef ap_uint<16> sum_t;
-typedef ap_uint<32> scale_t;
-
+typedef ap_uint<24> mul_t;
+typedef ap_int<28> add_unit_t; // 28-bit signed int - for add unit to handle negative number
 
 // Define the LNS data type using a struct
 template<int B, int Q, int R, int Gamma>
@@ -44,13 +46,9 @@ struct LNS {
         remainder = remainder_t(exp - (quotient * Gamma))  ;               
     }
     LNS(sign_t s, quotient_t q, remainder_t r) : sign(s), quotient(q), remainder(r) {
-//         exponent_t temp;
-// #pragma HLS BIND_OP variable=temp op=mul  impl=fabric latency=-1
-// #pragma HLS BIND_OP variable=temp op=add  impl=fabric latency=-1
-//         temp = q * Gamma  + r;
-//         exponent = temp;
         exponent = q * Gamma  + r;
-    }    
+    }
+
     LNS(sign_t s, exponent_t exp, quotient_t q, remainder_t r) : sign(s), exponent(exp), quotient(q), remainder(r) {}
 
     // Conversion from a floating-point number to LNS format
@@ -67,12 +65,6 @@ struct LNS {
         float abs_value;
         quotient_t  q;
         remainder_t r;
-// #pragma HLS BIND_OP variable=abs_value op=mul  impl=fabric latency=-1
-// #pragma HLS BIND_OP variable=q op=mul  impl=fabric latency=-1
-
-// #pragma HLS BIND_OP variable=r op=mul  impl=fabric latency=-1
-// #pragma HLS BIND_OP variable=r op=sub  impl=fabric latency=-1     
-
 
         abs_value = hls::fabs(value);
         q = (hls::floor(hls::log2(abs_value)));
