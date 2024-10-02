@@ -12,10 +12,13 @@ extern "C" {
     int index_of_closest_value(int input_value, int LUT[Gamma]);
 	
 	// Sorting Unit: Outputs contributions based on quotient and remainder
-	void sorting_and_shift(LNS<B, Q, R, Gamma> input, hls::stream<sum_t> out_stream[M]);
+	// void sorting_and_shift(LNS<B, Q, R, Gamma> input, hls::stream<sum_t> out_stream[M]);
+	void sorting_and_shift(LNS<B, Q, R, Gamma> input[N], hls::stream<sum_t> out_stream[M]);
 
     // Partial Sums Accumulator: Accumulates contributions from the array
+	// void partial_sum_accumulator(hls::stream<sum_t> in_stream[M], sum_t partial_sum[M]);
 	void partial_sum_accumulator(hls::stream<sum_t> in_stream[M], sum_t partial_sum[M]);
+
 
     // Scale Back: Convert back to float
 	void scale_back_mitchell_shift8(sum_t partial_sum[M], mul_t partial_sum_scale[M]);

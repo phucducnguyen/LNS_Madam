@@ -38,34 +38,59 @@ int index_of_closest_value(int input_value, int LUT[Gamma]) {
     return closest_index; // Return the index of the closest LUT value
 }
 
+// // Sorting Unit: Outputs contributions based on quotient and remainder to specific array element
+// void sorting_and_shift(LNS<B, Q, R, Gamma> input, hls::stream<sum_t> out_stream[M]) {
+// #pragma HLS PIPELINE II=1
+// #pragma HLS STREAM variable=out_stream depth=4
+// // #pragma HLS INTERFACE ap_ctrl_none port=return
+// // #pragma HLS INTERFACE s_axilite port=input bundle=control
+// // #pragma HLS INTERFACE axis port=out_stream
+
+//     // Positive: index from 0 to 7  -  Negative: index from 8 to 15
+//     int index = (input.sign == 0) ? int(input.remainder) : Gamma + int(input.remainder);
+//     out_stream[index].write(1<<input.quotient);
+// }
+
+// // Partial Sums Accumulator: Accumulates contributions from the array into a partial sum
+// void partial_sum_accumulator(hls::stream<sum_t> in_stream[M], sum_t partial_sum[M]) {
+// #pragma HLS PIPELINE II=1
+// #pragma HLS STREAM variable=in_stream depth=4
+
+//     // Accumulate values from each input stream
+//     for (int i = 0; i < M; i++) {
+// #pragma HLS UNROLL factor=4
+//         if (!in_stream[i].empty()) {
+//             sum_t value = in_stream[i].read();
+//             std::cout << "value(" << value << ")" << std::endl;
+//             partial_sum[i] += value;  // Accumulate the value
+//         }
+//     }
+// }
+
 // Sorting Unit: Outputs contributions based on quotient and remainder to specific array element
-void sorting_and_shift(LNS<B, Q, R, Gamma> input, hls::stream<sum_t> out_stream[M]) {
+void sorting_and_shift(LNS<B, Q, R, Gamma> input[N], hls::stream<sum_t> out_stream[M]) {
 #pragma HLS PIPELINE II=1
-#pragma HLS STREAM variable=out_stream depth=4
+#pragma HLS STREAM variable=out_stream depth=M
 // #pragma HLS INTERFACE ap_ctrl_none port=return
 // #pragma HLS INTERFACE s_axilite port=input bundle=control
 // #pragma HLS INTERFACE axis port=out_stream
 
-    // Positive: index from 0 to 7  -  Negative: index from 8 to 15
-    int index = (input.sign == 0) ? int(input.remainder) : Gamma + int(input.remainder);
-    
-    for (int i = 0; i < M; ++i) {
+    for (int i=0; i<N; i++){
 #pragma HLS UNROLL factor=4
-        out_stream[i].write((index == i) ? (1 << input.quotient) : 0);
+        // Positive: index from 0 to 7  -  Negative: index from 8 to 15
+        int index = (input[i].sign == 0) ? int(input[i].remainder) : Gamma + int(input[i].remainder);
+        out_stream[index].write(1<<input[i].quotient);
     }
 }
 
 // Partial Sums Accumulator: Accumulates contributions from the array into a partial sum
 void partial_sum_accumulator(hls::stream<sum_t> in_stream[M], sum_t partial_sum[M]) {
 #pragma HLS PIPELINE II=1
-#pragma HLS STREAM variable=in_stream depth=4
-// #pragma HLS INTERFACE ap_ctrl_none port=return
-// #pragma HLS INTERFACE axis port=in_stream
-// #pragma HLS INTERFACE s_axilite port=partial_sum bundle=control
+#pragma HLS STREAM variable=in_stream depth=M
 
     // Accumulate values from each input stream
     for (int i = 0; i < M; i++) {
-#pragma HLS UNROLL factor=4
+#pragma HLS UNROLL //factor=4
         if (!in_stream[i].empty()) {
             sum_t value = in_stream[i].read();
             std::cout << "value(" << value << ")" << std::endl;
@@ -83,7 +108,7 @@ void scale_back_mitchell_shift8(sum_t partial_sum[M], mul_t partial_sum_scale[M]
 // #pragma HLS INTERFACE s_axilite port=partial_sum_scale bundle=control
 
     for (int i = 0; i < M; i++) {
-#pragma HLS UNROLL factor=4       
+#pragma HLS UNROLL //factor=4       
 #pragma HLS BIND_OP variable=partial_sum_scale op=mul  impl=fabric latency=-1 // subpress the use of DSP for variable partial_sum_cale - operation=mul
         partial_sum_scale[i] = (partial_sum[i]* shift_8bit_log2_LUT_base8[i%8]);
     }
@@ -122,27 +147,33 @@ void partial_sums_generation_unit(LNS<B, Q, R, Gamma> inputs[N], mul_t partial_s
 #pragma HLS PIPELINE II=1
 
     hls::stream<sum_t> out_sort_shift[M];
-#pragma HLS STREAM variable=out_sort_shift depth=4
-#pragma HLS ARRAY_PARTITION variable=out_sort_shift cyclic factor=P
+#pragma HLS STREAM variable=out_sort_shift depth=-1 //depth=4
+#pragma HLS ARRAY_PARTITION variable=out_sort_shift complete //cyclic factor=P
 
     sum_t partial_sum[M];
 #pragma HLS ARRAY_PARTITION variable=partial_sum cyclic factor=P
 
     for (int i = 0; i < M; i++) {
-#pragma HLS UNROLL factor=4
+#pragma HLS UNROLL
         partial_sum[i] = 0;
     }
-
-    for (int i = 0; i < N; i++) {
-#pragma HLS UNROLL factor=4
-        std::cout << "inputs (" << inputs[i].sign << "," << inputs[i].quotient << "," << inputs[i].remainder << ")" << std::endl;
+    
+// #pragma HLS DATAFLOW
+    // Sorting and accumulation of partial sums
+    sorting_and_shift(inputs, out_sort_shift);
         
-        // Sorting and accumulation of partial sums
-        sorting_and_shift(inputs[i], out_sort_shift);
+    // Process each partial sum independently
+    partial_sum_accumulator(out_sort_shift, partial_sum); // Accumulate each stream's values
+//     for (int i = 0; i < N; i++) {
+// #pragma HLS UNROLL factor=4
+//         std::cout << "inputs (" << inputs[i].sign << "," << inputs[i].quotient << "," << inputs[i].remainder << ")" << std::endl;
         
-        // Process each partial sum independently
-        partial_sum_accumulator(out_sort_shift, partial_sum); // Accumulate each stream's values
-    }
+//         // Sorting and accumulation of partial sums
+//         sorting_and_shift(inputs[i], out_sort_shift);
+        
+//         // Process each partial sum independently
+//         partial_sum_accumulator(out_sort_shift, partial_sum); // Accumulate each stream's values
+//     }
     scale_back_mitchell_shift8(partial_sum,partial_sum_results);
     // scale_back_mitchell(partial_sum,partial_sum_results);
 }

@@ -3,7 +3,7 @@
 
 void mac(LNS<B, Q, R, Gamma> array_input_a[N], LNS<B, Q, R, Gamma> array_input_b[N], LNS<B, Q, R, Gamma> &result){
 // #pragma HLS PIPELINE II=1
-#pragma HLS DATAFLOW
+#pragma HLS DATAFLOW //For mac_nxn uses only
 // #pragma HLS ARRAY_PARTITION variable=array_input_a cyclic factor=P
 // #pragma HLS ARRAY_PARTITION variable=array_input_b cyclic factor=P
     LNS<B, Q, R, Gamma> multiplier_result[N];
@@ -25,13 +25,12 @@ void mac_nxn(LNS<B, Q, R, Gamma> array_input_a[N][N], LNS<B, Q, R, Gamma> array_
 
     // Perform matrix multiplication using the mac function
     for (int i = 0; i < N; i++) {
-#pragma HLS UNROLL factor=2
+// #pragma HLS UNROLL factor=2
         for (int j = 0; j < N; j++) {
 #pragma HLS UNROLL factor=2
             LNS<B, Q, R, Gamma> temp_result;
             temp_result = LNS<B, Q, R, Gamma>(); // Initialize to zero
-
-            
+       
 // #pragma HLS ARRAY_PARTITION variable=row_a cyclic factor=P
 // #pragma HLS ARRAY_PARTITION variable=col_b cyclic factor=P
 
