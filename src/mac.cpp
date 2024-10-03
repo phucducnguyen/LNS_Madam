@@ -9,9 +9,8 @@ void mac_array(LNS<B, Q, R, Gamma> array_input_a[N], LNS<B, Q, R, Gamma> array_i
 }
 
 void mac_nxn_array(LNS<B, Q, R, Gamma> array_input_a[N][N], LNS<B, Q, R, Gamma> array_input_b[N][N], LNS<B, Q, R, Gamma> result[N][N]){
-#pragma HLS INLINE off
+// #pragma HLS INLINE off
 #pragma HLS PIPELINE
-// #pragma HLS DATAFLOW
 // Use BRAM resource for arrays
 #pragma HLS INTERFACE m_axi port=array_input_a offset=slave bundle=gmem
 #pragma HLS INTERFACE m_axi port=array_input_b offset=slave bundle=gmem

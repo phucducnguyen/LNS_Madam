@@ -8,14 +8,15 @@ int shift_8bit_log2_LUT_base8[8]={256, 279, 304, 332, 362, 394, 431, 470}; // ne
 
 // Compare the input with the values inside a LUT to find the position of the closest value
 int index_of_closest_value(int input_value, int LUT[Gamma]) {
-    int closest_index = -1;
-    int diff;
+    #pragma HLS ARRAY_PARTITION variable=LUT complete dim=1 // Partition the LUT for parallel access
+
+    int closest_index = 0;
     int min_diff = abs(input_value - LUT[0]); // Initialize to maximum integer value
     
     // Iterate through the LUT array to find the closest value
     for (int i = 0; i < Gamma; i++) {
 // #pragma HLS UNROLL
-        diff = abs(input_value - LUT[i]);
+        int diff = abs(input_value - LUT[i]);
         if (diff < min_diff) {
             min_diff = diff;
             closest_index = i;
@@ -52,14 +53,11 @@ void partial_sum_accumulator(hls::stream<sum_t> in_stream[M], sum_t partial_sum[
 }
 
 void sort_shift_accumulate(LNS<B, Q, R, Gamma> input[N],sum_t partial_sum[M]){
-    // #pragma HLS PIPELINE II=1
     #pragma HLS ARRAY_PARTITION variable=partial_sum complete dim=1 // Enables parallel access to partial_sum
     for (int i=0; i<N; i++){
-        // #pragma HLS UNROLL factor=4
         // Positive: index from 0 to 7  -  Negative: index from 8 to 15
-        ap_uint<4> sign_offset  = Gamma * input[i].sign;
-        ap_uint<6> index = input[i].remainder + sign_offset;
-        // int index = input[i].remainder + Gamma * input[i].sign;        
+        ap_uint<4> sign_offset  = input[i].sign ? Gamma : 0;  ;
+        ap_uint<6> index = input[i].remainder + sign_offset;      
         partial_sum[index] += (1<<input[i].quotient);
     }
 }
@@ -178,7 +176,7 @@ void convertback(add_unit_t &sum, LNS<B, Q, R, Gamma> &final_sum){
 
 // Top-level adder function
 void adder(LNS<B, Q, R, Gamma> inputs[N], LNS<B, Q, R, Gamma> &final_sum) {
-#pragma HLS PIPELINE
+// #pragma HLS PIPELINE
     sum_t partial_sum[M]={0};
     #pragma HLS ARRAY_PARTITION variable=partial_sum complete
     mul_t partial_sum_results[M];
