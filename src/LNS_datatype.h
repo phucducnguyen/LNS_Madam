@@ -14,7 +14,7 @@ constexpr int R = 3;  // Bit-width for remainder
 constexpr int Gamma = 8; // Base 8 - if Gamma = 4 => base 4
 
 constexpr int M = Gamma*2; // Number of possible partial sum - if Log8 => 8 for possitive and 8 for negative numbers
-constexpr int N = 4; // Number of accumulators
+constexpr int N = 32; // Number of accumulators
 
 // constexpr int P = 2; // 2^P = N
 // typedef ap_uint<P> index_t; // optimize for resource usage
