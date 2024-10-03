@@ -4,10 +4,6 @@
 #include "../LNS_datatype.h" // Ensure this header file includes LNS class definition
 
 extern "C" {
-	// void add(const LNS<B, Q, R, Gamma>& a, const LNS<B, Q, R, Gamma>& b, LNS<B, Q, R, Gamma>& result);
-	
-    // Handle integer multiplication instead of using * operation
-    // mul_t shift_and_add(sum_t x, sum_t y);
 
     int index_of_closest_value(int input_value, int LUT[Gamma]);
 	
@@ -19,6 +15,7 @@ extern "C" {
 	// void partial_sum_accumulator(hls::stream<sum_t> in_stream[M], sum_t partial_sum[M]);
 	void partial_sum_accumulator(hls::stream<sum_t> in_stream[M], sum_t partial_sum[M]);
 
+    void sort_shift_accumulate(LNS<B, Q, R, Gamma> input[N],sum_t partial_sum[M]);
 
     // Scale Back: Convert back to float
 	void scale_back_mitchell_shift8(sum_t partial_sum[M], mul_t partial_sum_scale[M]);

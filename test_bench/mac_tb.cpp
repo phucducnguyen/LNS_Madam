@@ -5,39 +5,39 @@
 //     // input_a = np.array([1.5, 2.5, 3.5, 4.5])  # Input A values
 //     // input_b = np.array([2.5, 3.5, 4.5, 5.5])  # Input B values
     
-    LNS<B, Q, R, Gamma> input_a[4] = {LNS<B, Q, R, Gamma>(0, 1, 6), 
-                                        LNS<B, Q, R, Gamma>(0, 3, 0),
-                                        LNS<B, Q, R, Gamma>(0, 2, 3),
-                                        // LNS<B, Q, R, Gamma>(0, 0, 4),
-                                        // LNS<B, Q, R, Gamma>(0, 0, 5),
-                                        // LNS<B, Q, R, Gamma>(0, 3, 2),
-                                        // LNS<B, Q, R, Gamma>(0, 1, 3),
-                                        // LNS<B, Q, R, Gamma>(0, 0, 7),
-                                        // LNS<B, Q, R, Gamma>(0, 2, 6),
-                                        // LNS<B, Q, R, Gamma>(0, 2, 0),
-                                        // LNS<B, Q, R, Gamma>(0, 3, 1),
-                                        // LNS<B, Q, R, Gamma>(0, 1, 1),
-                                        // LNS<B, Q, R, Gamma>(0, 2, 3),
-                                        // LNS<B, Q, R, Gamma>(0, 0, 7),
-                                        // LNS<B, Q, R, Gamma>(0, 1, 2),
-                                        LNS<B, Q, R, Gamma>(0, 1, 5)}; // Log8(0, 2, 1)
+    // LNS<B, Q, R, Gamma> input_a[4] = {LNS<B, Q, R, Gamma>(0, 1, 6), 
+    //                                     LNS<B, Q, R, Gamma>(0, 3, 0),
+    //                                     LNS<B, Q, R, Gamma>(0, 2, 3),
+    //                                     // LNS<B, Q, R, Gamma>(0, 0, 4),
+    //                                     // LNS<B, Q, R, Gamma>(0, 0, 5),
+    //                                     // LNS<B, Q, R, Gamma>(0, 3, 2),
+    //                                     // LNS<B, Q, R, Gamma>(0, 1, 3),
+    //                                     // LNS<B, Q, R, Gamma>(0, 0, 7),
+    //                                     // LNS<B, Q, R, Gamma>(0, 2, 6),
+    //                                     // LNS<B, Q, R, Gamma>(0, 2, 0),
+    //                                     // LNS<B, Q, R, Gamma>(0, 3, 1),
+    //                                     // LNS<B, Q, R, Gamma>(0, 1, 1),
+    //                                     // LNS<B, Q, R, Gamma>(0, 2, 3),
+    //                                     // LNS<B, Q, R, Gamma>(0, 0, 7),
+    //                                     // LNS<B, Q, R, Gamma>(0, 1, 2),
+    //                                     LNS<B, Q, R, Gamma>(0, 1, 5)}; // Log8(0, 2, 1)
     
-    LNS<B, Q, R, Gamma> input_b[4] = {LNS<B, Q, R, Gamma>(0, 2, 2),
-                                        LNS<B, Q, R, Gamma>(0, 3, 0),
-                                        LNS<B, Q, R, Gamma>(0, 0,7),
-                                        // LNS<B, Q, R, Gamma>(0, 1, 6),
-                                        // LNS<B, Q, R, Gamma>(0, 1, 2),
-                                        // LNS<B, Q, R, Gamma>(0, 2, 4),
-                                        // LNS<B, Q, R, Gamma>(0, 3, 2),
-                                        // LNS<B, Q, R, Gamma>(0, 2, 1),
-                                        // LNS<B, Q, R, Gamma>(0, 3, 0),
-                                        // LNS<B, Q, R, Gamma>(0, 1, 6),
-                                        // LNS<B, Q, R, Gamma>(0, 2, 6),
-                                        // LNS<B, Q, R, Gamma>(0, 2, 7),
-                                        // LNS<B, Q, R, Gamma>(0, 1, 6),
-                                        // LNS<B, Q, R, Gamma>(0, 2, 3),
-                                        // LNS<B, Q, R, Gamma>(0, 0, 4),
-                                        LNS<B, Q, R, Gamma>(0, 2, 5)};// Log8(0, 2, 3)   
+    // LNS<B, Q, R, Gamma> input_b[4] = {LNS<B, Q, R, Gamma>(0, 2, 2),
+    //                                     LNS<B, Q, R, Gamma>(0, 3, 0),
+    //                                     LNS<B, Q, R, Gamma>(0, 0,7),
+    //                                     // LNS<B, Q, R, Gamma>(0, 1, 6),
+    //                                     // LNS<B, Q, R, Gamma>(0, 1, 2),
+    //                                     // LNS<B, Q, R, Gamma>(0, 2, 4),
+    //                                     // LNS<B, Q, R, Gamma>(0, 3, 2),
+    //                                     // LNS<B, Q, R, Gamma>(0, 2, 1),
+    //                                     // LNS<B, Q, R, Gamma>(0, 3, 0),
+    //                                     // LNS<B, Q, R, Gamma>(0, 1, 6),
+    //                                     // LNS<B, Q, R, Gamma>(0, 2, 6),
+    //                                     // LNS<B, Q, R, Gamma>(0, 2, 7),
+    //                                     // LNS<B, Q, R, Gamma>(0, 1, 6),
+    //                                     // LNS<B, Q, R, Gamma>(0, 2, 3),
+    //                                     // LNS<B, Q, R, Gamma>(0, 0, 4),
+    //                                     LNS<B, Q, R, Gamma>(0, 2, 5)};// Log8(0, 2, 3)   
 
 //     LNS<B, Q, R, Gamma> result = LNS<B, Q, R, Gamma>();
     
@@ -87,7 +87,7 @@ int main() {
             }
 
             // Use the mac function for the i-th row and j-th column multiplication
-            mac(row_a, col_b, temp_result);
+            mac_array(row_a, col_b, temp_result);
             std::cout << "temp_result[" << i << "][" << j << "] = " << temp_result[i][j].to_float() << std::endl;        
             result[i][j] = temp_result; // Store the result
         }
