@@ -46,7 +46,7 @@ void partial_sum_accumulator(hls::stream<sum_t> in_stream[M], sum_t partial_sum[
 // #pragma HLS UNROLL //factor=4
         if (!in_stream[i].empty()) {
             sum_t value = in_stream[i].read();
-            std::cout << "value(" << value << ")" << std::endl;
+            // std::cout << "value(" << value << ")" << std::endl;
             partial_sum[i] += value;  // Accumulate the value
         }
     }
@@ -78,11 +78,11 @@ void scale_back_mitchell_shift8(sum_t partial_sum[M], mul_t partial_sum_scale[M]
     #pragma HLS ARRAY_PARTITION variable=shift_8bit_log2_LUT_base8 complete dim=1
 
     for (int i = 0; i < M; i++) {
-        #pragma HLS UNROLL factor=8 // Unrolling by 8 to match the LUT base size for better efficiency
+        // #pragma HLS UNROLL factor=8 // Unrolling by 8 to match the LUT base size for better efficiency
         #pragma HLS BIND_OP variable=partial_sum_scale op=mul impl=fabric latency=-1
-
         // Scaling back with a predefined lookup table for the shift values
         partial_sum_scale[i] = partial_sum[i] * shift_8bit_log2_LUT_base8[i % 8];
+        std::cout << "partial_sum_scale["<<i<<"] = " << partial_sum_scale[i] << std::endl;
     }
 }
 
@@ -99,7 +99,6 @@ void partial_sums_generation_unit(LNS<B, Q, R, Gamma> inputs[N], mul_t partial_s
 
     sort_shift_accumulate(inputs, partial_sum);
     scale_back_mitchell_shift8(partial_sum,partial_sum_results);
-    // scale_back_mitchell(partial_sum,partial_sum_results);
 }
 
 // Add all scaled values - Big Sum
@@ -117,6 +116,7 @@ void addition_unit(mul_t partial_sum_accumulator_out[M], add_unit_t &final_sum) 
     }
 
     final_sum = positive_sum + negative_sum;
+    std::cout << "final_sum before scale back = " << final_sum << std::endl;
 }
 
 // Convert Int values back to Log values
@@ -147,7 +147,6 @@ void convertback(add_unit_t &sum, LNS<B, Q, R, Gamma> &final_sum){
 
     // Find the leading one position
     leading_one_pos = (abs_value == 0) ? 0 : (sizeof(abs_value) * 8 - __builtin_clz(abs_value) - 1);
-    // std::cout << "leading_one_pos = " << leading_one_pos << std::endl;
     std::cout << "leading_one_pos = " << leading_one_pos << std::endl;
 
     // Return back after shift
@@ -182,27 +181,15 @@ void adder(LNS<B, Q, R, Gamma> inputs[N], LNS<B, Q, R, Gamma> &final_sum) {
     mul_t partial_sum_results[M];
     add_unit_t final_sum_int=0;
     
-    // // Generate partial sums
-    // partial_sums_generation_unit(inputs, partial_sum_results);
-    // for (int i=0; i<N; i++){
-    //     std::cout << "inputs["<< i<<"]=(" << inputs[i].sign << "," << inputs[i].quotient << "," << inputs[i].remainder << ")" << std::endl;
-    // }
-    
     ////////////////////////////////////
     sort_shift_accumulate(inputs, partial_sum);
     scale_back_mitchell_shift8(partial_sum,partial_sum_results);
     ////////////////////////////////////
 
-    // for (int i=0; i<M; i++){
-    //     std::cout << "partial_sum_results =" << partial_sum_results[i] << std::endl;
-    // }
-    // Compute the final sum
-    addition_unit(partial_sum_results, final_sum_int);
 
-    // std::cout << "final_sum_int = " << final_sum_int << std::endl;
+    addition_unit(partial_sum_results, final_sum_int);
 
     // Convert final sum to LNS format
     convertback(final_sum_int, final_sum);
-    // std::cout << "final_sum = (" << final_sum.sign << "," << final_sum.quotient << "," << final_sum.remainder << ")" << std::endl;
     
 }
