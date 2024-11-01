@@ -65,20 +65,11 @@ void sort_shift_accumulate(LNS<B, Q, R, Gamma> input[N],sum_t partial_sum[M]){
 // Scale the partial
 // Using LUT to store shift-by-8 Mitchell approx - to reduce computation the use of DSP
 void scale_back_mitchell_shift8(sum_t partial_sum[M], mul_t partial_sum_scale[M]){
-//     #pragma HLS PIPELINE
-//     for (int i = 0; i < M; i ++) {
-// // #pragma HLS UNROLL //factor=4
-// #pragma HLS BIND_OP variable=partial_sum_scale op=mul  impl=fabric latency=-1 // subpress the use of DSP for variable partial_sum_cale - operation=mul
-//         partial_sum_scale[i] = partial_sum[i] * shift_8bit_log2_LUT_base8[i%8];
-//         // shift_and_add_optimized(partial_sum[i],shift_8bit_log2_LUT_base8[i%8], partial_sum_scale[i]);
-//     }
-    // #pragma HLS PIPELINE II=1
     #pragma HLS ARRAY_PARTITION variable=partial_sum complete dim=1
     #pragma HLS ARRAY_PARTITION variable=partial_sum_scale complete dim=1
     #pragma HLS ARRAY_PARTITION variable=shift_8bit_log2_LUT_base8 complete dim=1
 
     for (int i = 0; i < M; i++) {
-        // #pragma HLS UNROLL factor=8 // Unrolling by 8 to match the LUT base size for better efficiency
         #pragma HLS BIND_OP variable=partial_sum_scale op=mul impl=fabric latency=-1
         // Scaling back with a predefined lookup table for the shift values
         partial_sum_scale[i] = partial_sum[i] * shift_8bit_log2_LUT_base8[i % 8];
@@ -91,11 +82,6 @@ void partial_sums_generation_unit(LNS<B, Q, R, Gamma> inputs[N], mul_t partial_s
 
     hls::stream<sum_t> out_sort_shift[M];
     sum_t partial_sum[M]={0};
-
-    // // Sorting and accumulation of partial sums
-    // sorting_and_shift(inputs, out_sort_shift);
-    // // Process each partial sum independently
-    // partial_sum_accumulator(out_sort_shift, partial_sum); // Accumulate each stream's values
 
     sort_shift_accumulate(inputs, partial_sum);
     scale_back_mitchell_shift8(partial_sum,partial_sum_results);
@@ -185,8 +171,7 @@ void adder(LNS<B, Q, R, Gamma> inputs[N], LNS<B, Q, R, Gamma> &final_sum) {
     sort_shift_accumulate(inputs, partial_sum);
     scale_back_mitchell_shift8(partial_sum,partial_sum_results);
     ////////////////////////////////////
-
-
+    
     addition_unit(partial_sum_results, final_sum_int);
 
     // Convert final sum to LNS format
