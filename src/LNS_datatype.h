@@ -2,21 +2,23 @@
 #define LNS_DATATYPE_H
 
 #include <ap_int.h>
+#include <cstdint>
 #include <hls_math.h>
 #include <hls_stream.h>
 #include <cstdio>
 #include <iostream>
 
 // Define base factor Gamma, bit-width B, and bit-widths for quotient and remainder
-constexpr int B = 7;
-constexpr int Q = 4;  // Bit-width for quotient
-constexpr int R = 3;  // Bit-width for remainder
-constexpr int Gamma = 8;
+constexpr uint8_t B = 7;
+constexpr uint8_t Q = 4;  // Bit-width for quotient
+constexpr uint8_t R = 3;  // Bit-width for remainder
+constexpr uint8_t Gamma = 8; // Base 8 - if Gamma = 4 => base 4
 
-constexpr int N = 4; // Number of accumulators
-constexpr int M = Gamma*2; // Number of possible partial sum - if Log8 => 8 for possitive and 8 for negative numbers
+constexpr uint8_t M = Gamma*2; // Number of possible partial sum - if Log8 => 8 for possitive and 8 for negative numbers
+constexpr uint8_t N = 4; // Number of accumulators
 
-constexpr int P = 2; // Array : loop factor --- N%P = 0
+// constexpr int P = 2; // 2^P = N
+// typedef ap_uint<P> index_t; // optimize for resource usage
 
 // Typedefs for clarity and maintainability
 typedef ap_uint<1> sign_t;
@@ -25,11 +27,11 @@ typedef ap_uint<Q> quotient_t;
 typedef ap_uint<R> remainder_t;
 
 typedef ap_uint<16> sum_t;
-typedef ap_uint<24> mul_t;
-typedef ap_int<28> add_unit_t; // 28-bit signed int - for add unit to handle negative number
+typedef ap_uint<32> mul_t;
+typedef ap_int<33> add_unit_t; // 28-bit signed int - for add unit to handle negative number
 
 // Define the LNS data type using a struct
-template<int B, int Q, int R, int Gamma>
+template<uint8_t B, uint8_t Q, uint8_t R, uint8_t Gamma>
 struct LNS {
     // Data members
     sign_t sign;       // Sign bit (1-bit)
@@ -109,7 +111,7 @@ struct LNS {
 
 
 // Helper structure to create 2D array support for LNS
-template<int Rows, int Cols, int B, int Q, int R, int Gamma>
+template<uint8_t Rows, uint8_t Cols, uint8_t B, uint8_t Q, uint8_t R, uint8_t Gamma>
 struct LNS2DArray {
     LNS<B, Q, R, Gamma> data[Rows][Cols];  // 2D array of LNS
 
