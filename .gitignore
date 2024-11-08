@@ -49,3 +49,4 @@ mac_log8/*
 # mac_log8/compile_commands.json
 # mac_log8/hls_config.cfg
 # mac_log8/vitis-comp.json
+mac/mac/mac_nxn_array.zip
